@@ -1,8 +1,20 @@
 import mysql from "mysql2";
-import { resolve } from "path";
 import dbConfig from "../dbconfig/database";
-import { IHotKeyword, ILens, ILensDetail, ILensItem, ILensItemByKeyword, IPromotion } from "./lens";
 import {
+  IBrands,
+  IDays,
+  IFilteredLensList,
+  IHotKeyword,
+  ILens,
+  ILensDetail,
+  ILensItem,
+  ILensItemByKeyword,
+  IPromotion,
+} from "./lens";
+import {
+  IBrandsEntity,
+  IDaysEntity,
+  IFilteredLensListEntity,
   IHotKeywordEntity,
   ILensDetailEntity,
   ILensEntity,
@@ -14,59 +26,24 @@ import {
 const connection = mysql.createConnection(dbConfig);
 
 export default class LensRepo {
-  convertPeriodName(period: string): string {
-    return period
-      .replace(/1DAY/gi, "원데이")
-      .replace(/1day/gi, "원데이")
-      .replace(/2weeks/gi, "2주한달착용")
-      .replace(/1month/gi, "2주한달착용")
-      .replace(/3month/gi, "장기착용")
-      .replace(/6month/gi, "장기착용")
-      .replace(/1year/gi, "장기착용");
-  }
-  convertBrandName(brand: string): string {
-    return brand.replace("olens", "오렌즈").replace("lenstown", "렌즈타운");
-  }
-  convertPromotionDomainModel(lensEntity: IPromotionEntity[]): IPromotion[] {
-    return lensEntity.map((lens) => {
-      const productPeriod = this.convertPeriodName(lens.period);
-      return { id: lens.id, name: lens.name, model_thumbnail: lens.model_thumbnail, period: productPeriod };
-    });
-  }
-  convertLensItemDomainModel(lensEntity: ILensItemEntity[]): ILensItem[] {
-    return lensEntity.map((lens) => {
-      const productPeriod = this.convertPeriodName(lens.period);
-      const productBrand = this.convertBrandName(lens.brand);
-      return {
-        id: lens.id,
-        name: lens.name,
-        price: lens.price,
-        img: lens.img,
-        period: productPeriod,
-        reviewcount: lens.reviewcount,
-        brand: productBrand,
-      };
-    });
-  }
-  convertLensDetailDomainModel(lensEntity: ILensDetailEntity[]): ILensDetail[] {
-    return lensEntity.map((lens) => {
-      const productPeriod = this.convertPeriodName(lens.period);
-      const productBrand = this.convertBrandName(lens.brand);
-      return {
-        id: lens.id,
-        name: lens.name,
-        color: lens.color,
-        color_img: lens.color_img,
-        price: lens.price,
-        graphic: lens.graphic,
-        detail_img: lens.detail_img,
-        eye_thumbnail: lens.eye_thumbnail,
-        model_thumbnail: lens.model_thumbnail,
-        period: productPeriod,
-        reviewcount: lens.reviewcount,
-        brand: productBrand,
-      };
-    });
+  convertLensDetailPageEntityToDomainModel(
+    lensDetailPageEntity: ILensDetailEntity[]
+  ): ILensDetail[] {
+    return lensDetailPageEntity.map((ld) => ({
+      id: ld.id,
+      name: ld.name,
+      color: ld.color,
+      color_img: ld.color_img,
+      price: ld.price,
+      graphic: ld.graphic,
+      detail_img: ld.detail_img,
+      eye_thumbnail: ld.eye_thumbnail,
+      model_thumbnail: ld.model_thumbnail,
+      period: ld.period,
+      reviewcount: ld.reviewcount,
+      page_url: ld.page_url,
+      brand: ld.ko_name,
+    }));
   }
 
   getAllProducts(): Promise<ILens[]> {
@@ -77,50 +54,107 @@ export default class LensRepo {
       });
     });
   }
-  getPromotionProducts(): Promise<IPromotion[]> {
+
+  getLensBrandList(): Promise<IBrands[]> {
     return new Promise((resolve) => {
-      connection.query<IPromotionEntity[]>("SELECT id, name, model_thumbnail, period FROM lens;", (err, rows) => {
-        if (err) throw err;
-        resolve(this.convertPromotionDomainModel(rows));
-      });
-    });
-  }
-  getProductsByPeriodAndBrand(): Promise<ILensItem[]> {
-    return new Promise((resolve) => {
-      connection.query<ILensItemEntity[]>(
-        "SELECT id, name, price, img, period, reviewcount, brand FROM lens;",
+      connection.query<IBrandsEntity[]>(
+        "SELECT * FROM brands;",
         (err, rows) => {
           if (err) throw err;
-          resolve(this.convertLensItemDomainModel(rows));
+          resolve(rows);
         }
       );
     });
   }
+
+  getLensDayList(): Promise<IDays[]> {
+    return new Promise((resolve) => {
+      connection.query<IDaysEntity[]>("SELECT * FROM days;", (err, rows) => {
+        if (err) throw err;
+        resolve(rows);
+      });
+    });
+  }
+
+  getPromotionProducts(period: string): Promise<IPromotion[]> {
+    return new Promise((resolve) => {
+      connection.query<IPromotionEntity[]>(
+        `SELECT id, name, model_thumbnail, period_classifi FROM lens WHERE period_classifi=?;`,
+        [period],
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
+    });
+  }
+
+  getProductsByPeriodAndBrandId(
+    period: string,
+    brandId: number
+  ): Promise<ILensItem[]> {
+    return new Promise((resolve) => {
+      connection.query<ILensItemEntity[]>(
+        `SELECT id, name, price, img, reviewcount FROM lens WHERE period_classifi=? AND brand_id=?;`,
+        [period, brandId],
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
+    });
+  }
+
   getProductById(id: number): Promise<ILensDetail[]> {
     return new Promise((resolve) => {
       connection.query<ILensDetailEntity[]>(
-        `SELECT id, name, color, color_img, price, graphic, detail_img, eye_thumbnail, model_thumbnail, period, reviewcount, brand FROM lens WHERE id=${id};`,
+        `SELECT lens.id, name, color, color_img, price, graphic, detail_img, eye_thumbnail, model_thumbnail, period, reviewcount, page_url, ko_name FROM lens LEFT JOIN brands ON lens.brand_id = brands.id WHERE lens.id=${id};`,
         (err, rows) => {
           if (err) throw err;
-          resolve(this.convertLensDetailDomainModel(rows));
+          resolve(this.convertLensDetailPageEntityToDomainModel(rows));
         }
       );
     });
   }
+
   getProductByHotKeyword(): Promise<IHotKeyword[]> {
     return new Promise((resolve) => {
-      connection.query<IHotKeywordEntity[]>("SELECT id, name, reviewcount FROM lens;", (err, rows) => {
-        if (err) throw err;
-        resolve(rows);
-      });
+      connection.query<IHotKeywordEntity[]>(
+        "SELECT id, name, reviewcount FROM lens;",
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
     });
   }
+
   getLensitemListByKeyword(): Promise<ILensItemByKeyword[]> {
     return new Promise((resolve) => {
-      connection.query<ILensItemEntityByKeyword[]>("SELECT id, name, price, img FROM lens", (err, rows) => {
-        if (err) throw err;
-        resolve(rows);
-      });
+      connection.query<ILensItemEntityByKeyword[]>(
+        "SELECT id, name, price, img FROM lens;",
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
     });
   }
+
+  //   getFilteredLenslist(
+  //     period: string[],
+  //     color: string[],
+
+  //     brand: string[]
+  //   ): Promise<IFilteredLensList[]> {
+  //     return new Promise((resolve) => {
+  //       connection.query<IFilteredLensListEntity[]>(
+  //         `SELECT id, name, color_img FROM lens WHERE period_classifi IN ("${period[0]}", "${period[1]}", "${period[2]}") AND color IN ("${color[0]}", "${color[1]}", "${color[2]}", "${color[3]}", "${color[4]}", "${color[5]}", "${color[6]}") AND brand IN("${brand[0]}", "${brand[1]}", "${brand[2]}");`, //graphic은 min max 저장으로 맞추고 db에서 period ... 들고오기.
+  //         (err, rows) => {
+  //           if (err) throw err;
+  //           resolve(rows);
+  //         }
+  //       );
+  //     });
+  //   }
 }

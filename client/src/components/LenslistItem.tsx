@@ -5,8 +5,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const LensItemByBrandBox = styled.div`
-  background-color: #f6f1e8;
-  width: 186px;
+  background-color: #f3f4f6;
+  width: 32.5%;
   height: 254px;
   display: flex;
   flex-direction: column;
@@ -54,8 +54,9 @@ const LensItemByBrandBox = styled.div`
       width: 82%;
       heigth: 30%;
       text-align: center;
-      // font-weight: bold;
-      color: #787878;
+      font-weight: bold;
+      // color: #787878;
+      border-top: 1px solid gray;
     }
   }
 `;
@@ -78,7 +79,7 @@ export default function LenslistItem({ lens }: LenslistItemProps) {
       </Link>
       <div className="lens-item-info" onClick={clickDesc}>
         <span className="lens-name">{lens.name}</span>
-        <span className="lens-graphic">{lens.price}</span>
+        <span className="lens-graphic">{lens.price}원</span>
       </div>
     </LensItemByBrandBox>
   );

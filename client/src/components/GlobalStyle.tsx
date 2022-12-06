@@ -19,7 +19,6 @@ const GlobalStyle = createGlobalStyle`
   .wrap {
     width: 100%;
     height: 100%;
-    // background-color: gray;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,7 +30,6 @@ const GlobalStyle = createGlobalStyle`
     // min-width: 493px; (before px)
     min-width: 600px;
     height: 100%;
-    // background-color: white;
   }  
 `;
 

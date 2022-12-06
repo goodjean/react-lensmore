@@ -1,8 +1,10 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MainNavBar from "../components/MainNavBar";
 import styled from "styled-components";
 import { FiFilter, FiSearch, FiMenu } from "react-icons/fi";
+import LensApi from "../apis/lensApi";
+import { IDays } from "../types/lens";
 
 const HeaderContainer = styled.header`
   width: 100%;
@@ -56,7 +58,20 @@ type MainHeaderContainerProps = {
   setPeriod: Dispatch<SetStateAction<string>>;
 };
 
-export default function MainHeaderContainer({ period, setPeriod }: MainHeaderContainerProps) {
+export default function MainHeaderContainer({
+  period,
+  setPeriod,
+}: MainHeaderContainerProps) {
+  const [days, setDays] = useState<IDays[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const lensApi = new LensApi();
+      const dayList = await lensApi.getLensDayList();
+      setDays(dayList);
+    })();
+  }, []);
+
   return (
     <HeaderContainer>
       <div className="main-logo-link">
@@ -65,7 +80,7 @@ export default function MainHeaderContainer({ period, setPeriod }: MainHeaderCon
         </Link>
         <div className="main-features">
           <div>
-            <Link to="/">
+            <Link to="/filter">
               <FiFilter size={23} color="#6e6e6e" />
             </Link>
           </div>
@@ -82,9 +97,14 @@ export default function MainHeaderContainer({ period, setPeriod }: MainHeaderCon
         </div>
       </div>
       <nav className="main-nav">
-        <MainNavBar title="원데이" setPeriod={setPeriod} state={period === "원데이" ? "on" : ""} />
-        <MainNavBar title="2주/한달착용" setPeriod={setPeriod} state={period === "2주/한달착용" ? "on" : ""} />
-        <MainNavBar title="장기착용" setPeriod={setPeriod} state={period === "장기착용" ? "on" : ""} />
+        {days.map((day) => (
+          <MainNavBar
+            key={day.id}
+            day={day}
+            state={period === day.en ? "on" : ""}
+            setPeriod={setPeriod}
+          />
+        ))}
       </nav>
     </HeaderContainer>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { ILensDetail } from "../types/lensDetail";
 import styled from "styled-components";
-import LensColorBarItem from "./LensColorBarItem";
 
 const LensDetailUpBox = styled.section`
   display: flex;
@@ -65,14 +64,24 @@ type LensDetailInfoUpProps = {
   lensDetail: ILensDetail;
 };
 
-export default function LensDetailInfoUp({ lensDetail }: LensDetailInfoUpProps) {
+export default function LensDetailInfoUp({
+  lensDetail,
+}: LensDetailInfoUpProps) {
   return (
     <LensDetailUpBox>
       <div className="detail-thumbnail-container">
         {lensDetail.model_thumbnail ? (
-          <img src={lensDetail.model_thumbnail} alt="lensdetail main visual" className="detail-thumbnail" />
+          <img
+            src={lensDetail.model_thumbnail}
+            alt="lensdetail main visual"
+            className="detail-thumbnail"
+          />
         ) : (
-          <img src={lensDetail.eye_thumbnail} alt="lensdetail main visual" className="detail-thumbnail" />
+          <img
+            src={lensDetail.eye_thumbnail}
+            alt="lensdetail main visual"
+            className="detail-thumbnail"
+          />
         )}
       </div>
       <div className="detail-desc-container">
@@ -95,7 +104,7 @@ export default function LensDetailInfoUp({ lensDetail }: LensDetailInfoUpProps) 
           <div className="detail-graph-period-color">
             <div>
               <span className="detail-desc-title">직경:</span>
-              <span>{lensDetail.graphic}</span>
+              <span>{lensDetail.graphic}mm</span>
             </div>
             <div>
               <span className="detail-desc-title">착용기간:</span>
@@ -106,7 +115,15 @@ export default function LensDetailInfoUp({ lensDetail }: LensDetailInfoUpProps) 
               <span>{lensDetail.color}</span>
             </div>
             <div>
-              <img src={lensDetail.color_img} alt="color" style={{ width: 68, marginTop: 13 }} />
+              {!lensDetail.color_img ? (
+                <span>색상 이미지 없음</span>
+              ) : (
+                <img
+                  src={lensDetail.color_img}
+                  alt="color"
+                  style={{ width: 67, marginTop: 11 }}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LensApi from "../apis/lensApi";
-import { ILens } from "../types/lens";
+import { IBrands, ILensItem } from "../types/lens";
 import LenslistItem from "../components/LenslistItem";
 import styled from "styled-components";
 
@@ -20,30 +20,33 @@ const LensListByBrandBox = styled.article`
     margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
-    gap: 8px;
+    gap: 3px;
   }
 `;
 
 type LenslistContainerProps = {
   period: string;
-  brand: string;
+  brand: IBrands;
 };
 
-export default function LenslistContainer({ period, brand }: LenslistContainerProps) {
-  const [lenslist, setLenslist] = useState<ILens[] | undefined>([]);
+export default function LenslistContainer({
+  period,
+  brand,
+}: LenslistContainerProps) {
+  const [lenslist, setLenslist] = useState<ILensItem[] | undefined>([]);
 
   useEffect(() => {
     (async () => {
       const lensApi = new LensApi();
-      const lenslistByPeriodAndBrand = await lensApi.getLenslistByPeriodAndBrand(period, brand);
-      const threeLenslist = lenslistByPeriodAndBrand.slice(0, 3);
-      setLenslist(threeLenslist);
+      const lenslistByPeriodAndBrand =
+        await lensApi.getLenslistByPeriodAndBrand(period, brand.id);
+      setLenslist(lenslistByPeriodAndBrand);
     })();
-  }, [period, brand]);
+  }, [period, brand.id]);
 
   return (
     <LensListByBrandBox>
-      <h3>{`${brand} 베스트`}</h3>
+      <h3>{`${brand.ko_name} 베스트`}</h3>
       <div className="brand-best-list">
         {lenslist?.map((lens) => (
           <LenslistItem key={lens.id} lens={lens} />

@@ -1,18 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainHeaderContainer from "../containers/MainHeaderContainer";
 import PromotionContainer from "../containers/PromotionContainer";
 import LenslistContainer from "../containers/LenslistContainer";
 import styled from "styled-components";
+import LensApi from "../apis/lensApi";
+import { IBrands } from "../types/lens";
 
 const BrandBestListBox = styled.section`
   width: 100%;
   display: flex;
   flex-direction: column;
   padding: 11px 9px;
+  background-color: white;
 `;
 
 export default function MainPage() {
-  const [period, setPeriod] = useState("원데이");
+  const [period, setPeriod] = useState<string>("oneday");
+  const [brands, setBrands] = useState<IBrands[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const lensApi = new LensApi();
+      const brandList = await lensApi.getLensBrandList();
+      setBrands(brandList);
+    })();
+  }, []);
 
   return (
     <div className="wrap">
@@ -20,9 +32,9 @@ export default function MainPage() {
         <MainHeaderContainer period={period} setPeriod={setPeriod} />
         <PromotionContainer period={period} />
         <BrandBestListBox>
-          <LenslistContainer period={period} brand="오렌즈" />
-          <LenslistContainer period={period} brand="렌즈미" />
-          <LenslistContainer period={period} brand="렌즈타운" />
+          {brands.map((brand) => (
+            <LenslistContainer key={brand.id} period={period} brand={brand} />
+          ))}
         </BrandBestListBox>
       </div>
     </div>

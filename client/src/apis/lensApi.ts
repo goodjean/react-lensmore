@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ILens } from "../types/lens";
+import { IBrands, IDays, ILens } from "../types/lens";
 
 export default class LensApi {
   async getAllLensList(): Promise<Array<ILens>> {
@@ -12,9 +12,18 @@ export default class LensApi {
   //   const lenslistByPeriod = allLenslist.filter((lens) => lens.period === period);
   //   return lenslistByPeriod;
   // }
-  async getLenslistByPeriodAndBrand(period: string, brand: string) {
-    const replacedPeriod = period.replace("/", "");
-    const res = await axios.get(`products/list/${replacedPeriod}/${brand}`);
+  async getLenslistByPeriodAndBrand(period: string, brandId: number) {
+    const res = await axios.get(`products/list/${period}/${brandId}`);
+    return res.data;
+  }
+
+  async getLensBrandList(): Promise<IBrands[]> {
+    const res = await axios.get(`/brand-list`);
+    return res.data;
+  }
+
+  async getLensDayList(): Promise<IDays[]> {
+    const res = await axios.get("/day-list");
     return res.data;
   }
 }

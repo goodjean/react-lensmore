@@ -5,7 +5,9 @@ import MainPage from "../pages/MainPage";
 import LensDetailPage from "../pages/LensDetailPage";
 import GlobalStyle from "../components/GlobalStyle";
 import SearchPage from "../pages/SearchPage";
-import ResultsPage from "../pages/ResultsPage";
+import SearchResultPage from "../pages/SearchResultPage";
+import FilterPage from "../pages/FilterPage";
+import FilterResultPage from "../pages/FilterResultPage";
 
 export default function Router() {
   return (
@@ -16,7 +18,9 @@ export default function Router() {
           <Route path="/" element={<MainPage />} />
           <Route path="/product/detail/:id" element={<LensDetailPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/search/results/:name" element={<ResultsPage />} />
+          <Route path="/search/results/:name" element={<SearchResultPage />} />
+          <Route path="/filter" element={<FilterPage />} />
+          <Route path="/filter/results" element={<FilterResultPage />} />
         </Routes>
       </BrowserRouter>
     </>

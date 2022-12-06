@@ -10,5 +10,6 @@ export interface ILensDetail {
   model_thumbnail: string;
   period: string;
   reviewcount: string;
+  page_url: string;
   brand: string;
 }

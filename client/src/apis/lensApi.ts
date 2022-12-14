@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IBrands, IDays, ILens } from "../types/lens";
+import { IBrands, IColors, IDays, ILens } from "../types/lens";
 
 export default class LensApi {
   async getAllLensList(): Promise<Array<ILens>> {
@@ -24,6 +24,11 @@ export default class LensApi {
 
   async getLensDayList(): Promise<IDays[]> {
     const res = await axios.get("/day-list");
+    return res.data;
+  }
+
+  async getLensColorList(): Promise<IColors[]> {
+    const res = await axios.get("/color-list");
     return res.data;
   }
 }

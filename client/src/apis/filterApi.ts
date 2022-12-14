@@ -8,7 +8,6 @@ export default class FilterApi {
     price: string[],
     brand: string[]
   ) {
-    // const searchParams = new URLSearchParams(location.search);
     const res = await axios.get(`/filter/result-items`, {
       params: { period, color, graphic, price, brand },
     });

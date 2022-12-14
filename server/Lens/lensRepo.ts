@@ -2,6 +2,7 @@ import mysql from "mysql2";
 import dbConfig from "../dbconfig/database";
 import {
   IBrands,
+  IColors,
   IDays,
   IFilteredLensList,
   IHotKeyword,
@@ -13,6 +14,7 @@ import {
 } from "./lens";
 import {
   IBrandsEntity,
+  IColorsEntity,
   IDaysEntity,
   IFilteredLensListEntity,
   IHotKeywordEntity,
@@ -73,6 +75,18 @@ export default class LensRepo {
         if (err) throw err;
         resolve(rows);
       });
+    });
+  }
+
+  getLensColorList(): Promise<IColors[]> {
+    return new Promise((resolve) => {
+      connection.query<IColorsEntity[]>(
+        "SELECT * FROM colors;",
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
     });
   }
 
@@ -141,20 +155,34 @@ export default class LensRepo {
     });
   }
 
-  //   getFilteredLenslist(
-  //     period: string[],
-  //     color: string[],
-
-  //     brand: string[]
-  //   ): Promise<IFilteredLensList[]> {
-  //     return new Promise((resolve) => {
-  //       connection.query<IFilteredLensListEntity[]>(
-  //         `SELECT id, name, color_img FROM lens WHERE period_classifi IN ("${period[0]}", "${period[1]}", "${period[2]}") AND color IN ("${color[0]}", "${color[1]}", "${color[2]}", "${color[3]}", "${color[4]}", "${color[5]}", "${color[6]}") AND brand IN("${brand[0]}", "${brand[1]}", "${brand[2]}");`, //graphic은 min max 저장으로 맞추고 db에서 period ... 들고오기.
-  //         (err, rows) => {
-  //           if (err) throw err;
-  //           resolve(rows);
-  //         }
-  //       );
-  //     });
-  //   }
+  getFilteredLenslist(
+    period: string[],
+    color: string[],
+    graphic: number[],
+    price: number[],
+    brand: string[]
+  ): Promise<IFilteredLensList[]> {
+    return new Promise((resolve) => {
+      connection.query<IFilteredLensListEntity[]>(
+        `SELECT lens.id, name, price, img FROM lens LEFT JOIN days ON lens.period_classifi = days.en LEFT JOIN colors ON lens.color_id = colors.id LEFT JOIN brands ON lens.brand_id = brands.id WHERE days.ko IN (${period.map(
+          (p) => `"${p}"`
+        )}) AND colors.color IN (${color.map(
+          (c) => `"${c}"`
+        )}) AND brands.ko_name IN (${brand.map(
+          (b) => `"${b}"`
+        )}) AND lens.price >= cast(${
+          price[0]
+        } as unsigned) AND lens.price < cast(${
+          price[1]
+        } as unsigned) AND lens.graphic >= cast(${
+          graphic[0]
+        } as unsigned) AND lens.graphic <= cast(${graphic[1]} as unsigned);`,
+        (err, rows) => {
+          if (err) throw err;
+          console.log(rows);
+          resolve(rows);
+        }
+      );
+    });
+  }
 }

@@ -28,6 +28,11 @@ export interface IDays {
   ko: string;
 }
 
+export interface IColors {
+  id: number;
+  color: string;
+}
+
 export interface IPromotion {
   id: number;
   name: string;
@@ -75,5 +80,14 @@ export interface ILensItemByKeyword {
 export interface IFilteredLensList {
   id: number;
   name: string;
-  color_img: string;
+  price: number;
+  img: string;
 }
+
+export type ReqQuery = {
+  period: string[];
+  color: string[];
+  graphic: string[];
+  price: string[];
+  brand: string[];
+};

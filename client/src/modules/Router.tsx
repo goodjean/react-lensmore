@@ -8,6 +8,7 @@ import SearchPage from "../pages/SearchPage";
 import SearchResultPage from "../pages/SearchResultPage";
 import FilterPage from "../pages/FilterPage";
 import FilterResultPage from "../pages/FilterResultPage";
+import MenuPage from "../pages/MenuPage";
 
 export default function Router() {
   return (
@@ -21,6 +22,7 @@ export default function Router() {
           <Route path="/search/results/:name" element={<SearchResultPage />} />
           <Route path="/filter" element={<FilterPage />} />
           <Route path="/filter/results" element={<FilterResultPage />} />
+          <Route path="/menu" element={<MenuPage />} />
         </Routes>
       </BrowserRouter>
     </>

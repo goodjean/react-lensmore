@@ -1,5 +1,6 @@
 import {
   IBrands,
+  IColors,
   IDays,
   IHotKeyword,
   ILensDetail,
@@ -22,6 +23,10 @@ export default class LensService {
 
   async getLensDayList(): Promise<IDays[]> {
     return await this.lensRepo.getLensDayList();
+  }
+
+  async getLensColorList(): Promise<IColors[]> {
+    return await this.lensRepo.getLensColorList();
   }
 
   async getPromotionProducts(period: string): Promise<IPromotion | undefined> {
@@ -71,37 +76,41 @@ export default class LensService {
     return productListByKeyword;
   }
 
-  // async getFilteredLenslist(
-  //   periodList: string,
-  //   colorList: string,
-  //   graphicList: string,
-  //   priceList: string,
-  //   brandList: string
-  // ) {
-  //   const period = JSON.parse(periodList);
-  //   const color = JSON.parse(colorList);
-  //   // const graphic = JSON.parse(graphicList);
-  //   // const price = JSON.parse(priceList);
-  //   const brand = JSON.parse(brandList);
+  async getFilteredLenslist(
+    period: string[],
+    color: string[],
+    graphic: string[],
+    price: string[],
+    brand: string[]
+  ) {
+    let graphicList: number[] = [];
 
-  //   const period_class = period.map((p: string) =>
-  //     p
-  //       .replace("원데이", "oneday")
-  //       .replace("2주/한달착용", "weekly-1month")
-  //       .replace("장기착용", "long-term")
-  //   );
-  //   const brand_class = brand.map((b: string) =>
-  //     b
-  //       .replace("오렌즈", "olens")
-  //       .replace("렌즈미", "lensme")
-  //       .replace("렌즈타운", "lenstown")
-  //   );
+    graphic.forEach((gp) => {
+      if (gp === "13.7 ~") {
+        graphicList = [13.7, 16];
+      } else {
+        const graphicSpl = gp.split("~");
+        graphicList = graphicSpl.map((gp) => Number(gp));
+      }
+    });
 
-  //   return await this.lensRepo.getFilteredLenslist(
-  //     period_class,
-  //     color,
-  //     // graphic , price는 어케함 ㅠㅜ
-  //     brand_class
-  //   );
-  // }
+    let priceList: number[] = [];
+
+    price.forEach((pc) => {
+      const priceRpl = pc.replace("원", "").replace("이상", "").trim();
+      if (priceRpl === "30000") {
+        priceList = [30000, 300000];
+      } else {
+      }
+      const priceSpl = priceRpl.split("~");
+      priceList = priceSpl.map((pc) => Number(pc));
+    });
+    return await this.lensRepo.getFilteredLenslist(
+      period,
+      color,
+      graphicList,
+      priceList,
+      brand
+    );
+  }
 }

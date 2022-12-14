@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBarToBackAndHome from "../components/NavBarToBackAndHome";
 import FilterContainer from "../containers/FilterContainer";
+import LensApi from "../apis/lensApi";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -14,10 +15,10 @@ const FilterPageStyle = styled.section`
   gap: 10px;
 
   button {
-    width: 100%;
+    width: 99%;
     height: 30%;
     padding: 7px;
-    margin-top: 50px;
+    margin-top: 60px;
     border-radius: 8px;
     border-color: lightgray;
     background-color: black;
@@ -33,20 +34,31 @@ interface SetConditionProps {
 }
 
 function FilterPage() {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const location = useLocation();
   const navigate = useNavigate();
   const title = "Filter";
-  const periodClassifis = ["원데이", "2주/한달착용", "장기착용"];
-  const colors = ["브라운", "그레이", "블랙", "초코", "핑크", "블루", "그린"];
+  const [periods, setPeriods] = useState<string[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
   const graphics = ["11.9 ~ 13.0", "13.1 ~ 13.6", "13.7 ~"];
-  const prices = ["5000 ~ 10000원대", "20000원대", "30000원대 ~"];
-  const brands = ["오렌즈", "렌즈미", "렌즈타운"];
+  const prices = ["5000 ~ 10000원", "10000 ~ 30000원", "30000원 이상"];
+  const [brands, setBrands] = useState<string[]>([]);
+
   const [periodStates, setPeriodStates] = useState<string[]>([]);
   const [colorStates, setColorStates] = useState<string[]>([]);
   const [graphicStates, setGraphicStates] = useState<string[]>([]);
   const [priceStates, setPriceStates] = useState<string[]>([]);
   const [brandStates, setBrandStates] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const lensApi = new LensApi();
+      const lensDayList = await lensApi.getLensDayList();
+      const lensColorList = await lensApi.getLensColorList();
+      const lensBrandList = await lensApi.getLensBrandList();
+      setPeriods(lensDayList.map((day) => day.ko));
+      setColors(lensColorList.map((color) => color.color));
+      setBrands(lensBrandList.map((brand) => brand.ko_name));
+    })();
+  }, []);
 
   function clickButton() {
     navigate("/filter/results", {
@@ -60,11 +72,14 @@ function FilterPage() {
     });
   }
 
-  function setCondition(data: SetConditionProps) {
+  function setCondition(data: SetConditionProps, title: string) {
     const condition = data.states.find((state) => state === data.category);
-
     if (!condition) {
-      data.setStates((prev) => [...prev, data.category]);
+      if (title === "직경" || title === "가격") {
+        data.setStates([data.category]);
+      } else {
+        data.setStates((prev) => [...prev, data.category]);
+      }
     } else {
       data.setStates(data.states.filter((state) => state !== data.category));
     }
@@ -72,12 +87,12 @@ function FilterPage() {
 
   function clickPeriod(category: string) {
     const data = { states: periodStates, category, setStates: setPeriodStates };
-    setCondition(data);
+    setCondition(data, "사용구분");
   }
 
   function clickColor(category: string) {
     const data = { states: colorStates, category, setStates: setColorStates };
-    setCondition(data);
+    setCondition(data, "컬러");
   }
 
   function clickGraphic(category: string) {
@@ -86,17 +101,17 @@ function FilterPage() {
       category,
       setStates: setGraphicStates,
     };
-    setCondition(data);
+    setCondition(data, "직경");
   }
 
   function clickPrice(category: string) {
     const data = { states: priceStates, category, setStates: setPriceStates };
-    setCondition(data);
+    setCondition(data, "가격");
   }
 
   function clickBrand(category: string) {
     const data = { states: brandStates, category, setStates: setBrandStates };
-    setCondition(data);
+    setCondition(data, "브랜드");
   }
 
   return (
@@ -106,28 +121,38 @@ function FilterPage() {
         <FilterPageStyle>
           <FilterContainer
             title="사용구분"
-            categories={periodClassifis}
+            categories={periods}
+            states={periodStates}
             onClick={clickPeriod}
+            setStates={setPeriodStates}
           />
           <FilterContainer
             title="컬러"
             categories={colors}
+            states={colorStates}
             onClick={clickColor}
+            setStates={setColorStates}
           />
           <FilterContainer
             title="직경"
             categories={graphics}
+            states={graphicStates}
             onClick={clickGraphic}
+            setStates={setGraphicStates}
           />
           <FilterContainer
             title="가격"
             categories={prices}
+            states={priceStates}
             onClick={clickPrice}
+            setStates={setPriceStates}
           />
           <FilterContainer
             title="브랜드"
             categories={brands}
+            states={brandStates}
             onClick={clickBrand}
+            setStates={setBrandStates}
           />
           <button onClick={clickButton}>검색</button>
         </FilterPageStyle>

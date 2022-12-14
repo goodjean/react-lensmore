@@ -30,6 +30,11 @@ export interface IDaysEntity extends RowDataPacket {
   ko: string;
 }
 
+export interface IColorsEntity extends RowDataPacket {
+  id: number;
+  color: string;
+}
+
 export interface IPromotionEntity extends RowDataPacket {
   id: number;
   name: string;
@@ -77,5 +82,6 @@ export interface ILensItemEntityByKeyword extends RowDataPacket {
 export interface IFilteredLensListEntity extends RowDataPacket {
   id: number;
   name: string;
-  color_img: string;
+  price: number;
+  img: string;
 }

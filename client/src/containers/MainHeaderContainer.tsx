@@ -90,7 +90,7 @@ export default function MainHeaderContainer({
             </Link>
           </div>
           <div>
-            <Link to="/">
+            <Link to="/menu">
               <FiMenu size={23} color="#6e6e6e" />
             </Link>
           </div>

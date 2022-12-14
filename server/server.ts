@@ -1,4 +1,5 @@
-import express from "express";
+import express, { Request } from "express";
+import { ReqQuery } from "./Lens/lens";
 import LensService from "./Lens/lensService";
 
 const app = express();
@@ -19,10 +20,14 @@ app.get("/day-list", async (req, res) => {
   res.json(await lensService.getLensDayList());
 });
 
-// app.get("/search/results?keyword=keyword", (req, res) => {
-//   const {keyword} = req.query;
-//   console.log(keyword);
-// });
+app.get("/color-list", async (req, res) => {
+  res.json(await lensService.getLensColorList());
+});
+
+app.get("/search/results?keyword=keyword", (req, res) => {
+  const { keyword } = req.query;
+  console.log(keyword);
+});
 
 app.get("/promotion/products/:period", async (req, res) => {
   const { period } = req.params;
@@ -50,24 +55,22 @@ app.get("/search/results-keyword/:name", async (req, res) => {
   res.json(await lensService.getLensitemListByKeyword(name));
 });
 
-// app.get("/filter/result-items", async (req, res) => {
-//   const { period, color, graphic, price, brand } = req.query;
-//   const periodList = JSON.stringify(period);
-//   const colorList = JSON.stringify(color);
-//   const graphicList = JSON.stringify(graphic);
-//   const priceList = JSON.stringify(price);
-//   const brandList = JSON.stringify(brand);
-
-//   res.json(
-//     await lensService.getFilteredLenslist(
-//       periodList,
-//       colorList,
-//       graphicList,
-//       priceList,
-//       brandList
-//     )
-//   );
-// });
+app.get(
+  "/filter/result-items",
+  async (req: Request<{}, {}, {}, ReqQuery>, res) => {
+    const { period, color, graphic, price, brand } = req.query;
+    console.log(period, color, graphic, price, brand);
+    res.json(
+      await lensService.getFilteredLenslist(
+        period,
+        color,
+        graphic,
+        price,
+        brand
+      )
+    );
+  }
+);
 
 app.listen(port, () => {
   console.log(`server is running on ${port} port`);

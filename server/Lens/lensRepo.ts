@@ -103,6 +103,19 @@ export default class LensRepo {
     });
   }
 
+  getLenslistByPeriod(period: string): Promise<ILensItemByKeyword[]> {
+    return new Promise((resolve) => {
+      connection.query<ILensItemEntityByKeyword[]>(
+        `SELECT id, name, price, img FROM lens WHERE period_classifi=?`,
+        [period],
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
+    });
+  }
+
   getProductsByPeriodAndBrandId(
     period: string,
     brandId: number

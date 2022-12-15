@@ -28,14 +28,19 @@ function SearchResultsPage() {
       <div className="wrap-inner">
         <NavBarToBackAndHome title={name} />
         {lensItemsByKeyword.length ? (
-          <>
+          <div>
+            <h4>검색결과</h4>
             {lensItemsByKeyword.map((lens) => (
               <LenslistItem key={lens.id} lens={lens} />
             ))}
-          </>
+          </div>
         ) : (
           <div>
-            <img src="https://o-lens.com/assets/images/common/ico-i2.png" alt="no-data" style={{ width: 40 }} />
+            <img
+              src="https://o-lens.com/assets/images/common/ico-i2.png"
+              alt="no-data"
+              style={{ width: 40 }}
+            />
             <h3>검색결과가 없습니다.</h3>
           </div>
         )}

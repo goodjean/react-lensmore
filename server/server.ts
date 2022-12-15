@@ -34,6 +34,11 @@ app.get("/promotion/products/:period", async (req, res) => {
   res.json(await lensService.getPromotionProducts(period));
 });
 
+app.get("/products/list/:period", async (req, res) => {
+  const { period } = req.params;
+  res.json(await lensService.getLenslistByPeriod(period));
+});
+
 app.get("/products/list/:period/:brand", async (req, res) => {
   const { period, brand }: { period: string; brand: string } = req.params;
   const brandId = Number(brand);

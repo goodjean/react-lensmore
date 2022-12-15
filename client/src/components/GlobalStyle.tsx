@@ -26,9 +26,9 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .wrap-inner {
-    width: 35%;
+    width: 67%;
     // min-width: 493px; (before px)
-    min-width: 600px;
+    // min-width: 500px;
     height: 100%;
   }  
 `;

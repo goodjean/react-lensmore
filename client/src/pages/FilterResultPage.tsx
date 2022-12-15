@@ -61,9 +61,23 @@ function FilterResultPage() {
     <div className="wrap">
       <div className="wrap-inner">
         <NavBarToBackAndHome title="검색결과" />
-        {filterLenslist.map((lens) => (
-          <LenslistItem key={lens.id} lens={lens} />
-        ))}
+        {filterLenslist.length === 0 ? (
+          <div>
+            <img
+              src="https://o-lens.com/assets/images/common/ico-i2.png"
+              alt="no-data"
+              style={{ width: 40 }}
+            />
+            <h3>검색결과가 없습니다.</h3>
+          </div>
+        ) : (
+          <div>
+            <h4>검색결과</h4>
+            {filterLenslist.map((lens) => (
+              <LenslistItem key={lens.id} lens={lens} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

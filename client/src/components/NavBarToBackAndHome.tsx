@@ -6,7 +6,7 @@ import { IoHomeOutline } from "react-icons/io5";
 
 const NavBarBackHome = styled.header`
   width: 100%;
-  height: 67px;
+  height: 9.7%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,7 +25,9 @@ type NavBarToBackAndHomeProps = {
   title: string;
 };
 
-export default function NavBarToBackAndHome({ title }: NavBarToBackAndHomeProps) {
+export default function NavBarToBackAndHome({
+  title,
+}: NavBarToBackAndHomeProps) {
   const navigate = useNavigate();
 
   return (

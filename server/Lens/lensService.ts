@@ -2,6 +2,7 @@ import {
   IBrands,
   IColors,
   IDays,
+  IFilteredLensList,
   IHotKeyword,
   ILensDetail,
   ILensItem,
@@ -35,6 +36,11 @@ export default class LensService {
       (prom) => prom.model_thumbnail !== undefined
     );
     return promotion[2];
+  }
+
+  async getLenslistByPeriod(period: string): Promise<ILensItemByKeyword[]> {
+    const lenslistByPeriod = await this.lensRepo.getLenslistByPeriod(period);
+    return lenslistByPeriod;
   }
 
   async getProductsByPeriodAndBrandId(
@@ -82,7 +88,7 @@ export default class LensService {
     graphic: string[],
     price: string[],
     brand: string[]
-  ) {
+  ): Promise<IFilteredLensList[]> {
     let graphicList: number[] = [];
 
     graphic.forEach((gp) => {
@@ -101,9 +107,9 @@ export default class LensService {
       if (priceRpl === "30000") {
         priceList = [30000, 300000];
       } else {
+        const priceSpl = priceRpl.split("~");
+        priceList = priceSpl.map((pc) => Number(pc));
       }
-      const priceSpl = priceRpl.split("~");
-      priceList = priceSpl.map((pc) => Number(pc));
     });
     return await this.lensRepo.getFilteredLenslist(
       period,

@@ -9,6 +9,7 @@ import SearchResultPage from "../pages/SearchResultPage";
 import FilterPage from "../pages/FilterPage";
 import FilterResultPage from "../pages/FilterResultPage";
 import MenuPage from "../pages/MenuPage";
+import OnedayLensPage from "../pages/OnedayLensPage";
 
 export default function Router() {
   return (
@@ -23,6 +24,7 @@ export default function Router() {
           <Route path="/filter" element={<FilterPage />} />
           <Route path="/filter/results" element={<FilterResultPage />} />
           <Route path="/menu" element={<MenuPage />} />
+          <Route path="/menu/lens-list/:period" element={<OnedayLensPage />} />
         </Routes>
       </BrowserRouter>
     </>

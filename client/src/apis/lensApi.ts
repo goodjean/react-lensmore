@@ -7,13 +7,14 @@ export default class LensApi {
     const allLenslist = res.data;
     return allLenslist;
   }
-  // async getLenslistByPeriod(period: string) {
-  //   const allLenslist = await this.getAllLensList();
-  //   const lenslistByPeriod = allLenslist.filter((lens) => lens.period === period);
-  //   return lenslistByPeriod;
-  // }
+
+  async getLenslistByPeriod(period: string) {
+    const res = await axios.get(`/products/list/${period}`);
+    return res.data;
+  }
+
   async getLenslistByPeriodAndBrand(period: string, brandId: number) {
-    const res = await axios.get(`products/list/${period}/${brandId}`);
+    const res = await axios.get(`/products/list/${period}/${brandId}`);
     return res.data;
   }
 

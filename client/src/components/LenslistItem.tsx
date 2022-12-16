@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const LensItemByBrandBox = styled.div`
   background-color: #f3f4f6;
   width: 32.5%;
-  height: 254px;
+  height: 263px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,9 +16,9 @@ const LensItemByBrandBox = styled.div`
   border: 2px solid #ebebeb;
 
   .lens-item {
-    width: 92%;
-    height: 66%;
-    margin-top: 6px;
+    width: 95%;
+    height: 68%;
+    margin-top: 4px;
   }
 
   .lens-item-img {
@@ -56,7 +56,6 @@ const LensItemByBrandBox = styled.div`
       text-align: center;
       font-weight: bold;
       // color: #787878;
-      border-top: 1px solid gray;
     }
   }
 `;

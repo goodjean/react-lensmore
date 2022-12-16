@@ -23,19 +23,24 @@ const LensDetailUpBox = styled.section`
     width: 40%;
     height: 100%;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     padding-left: 25px;
+    overflow: hidden;
+    // white-space: nowrap;
   }
+
   .detail-main-desc {
     width: 100%;
     height: 50%;
     line-height: 1.9;
     padding-top: 16px;
     border-bottom: 1px solid lightgray;
+    position: relative;
   }
 
   h4 {
-    margin: 8px 0px 48px;
+    margin: 8px 0px 0px;
     display: flex;
     align-items: baseline;
   }
@@ -44,6 +49,7 @@ const LensDetailUpBox = styled.section`
     color: #6e6e6e;
     margin-right: 9px;
     font-size: 15px;
+    // padding-bottom: 5px;
   }
 
   .detail-sub-desc {
@@ -57,6 +63,19 @@ const LensDetailUpBox = styled.section`
 
   .detail-graph-period-color {
     padding-bottom: 22px;
+  }
+
+  .review-brand {
+    position: absolute;
+    top: 145px;
+  }
+
+  .none-color {
+    display: block;
+    padding-bottom: 70px;
+    background: url("https://o-lens.com/assets/images/common/ico-r3.png")
+      no-repeat 4% 18px;
+    background-size: 67px;
   }
 `;
 
@@ -89,15 +108,19 @@ export default function LensDetailInfoUp({
           <h3>{lensDetail.name}</h3>
           <h4>
             <span className="detail-desc-title">가격:</span>
-            <span>{lensDetail.price}</span>
+            <span>{lensDetail.price}원</span>
           </h4>
-          <div>
-            <span className="detail-desc-title">리뷰:</span>
-            <span className="detail-desc-title">{lensDetail.reviewcount}</span>
-          </div>
-          <div>
-            <span className="detail-desc-title">브랜드:</span>
-            <span className="detail-desc-title">{lensDetail.brand}</span>
+          <div className="review-brand">
+            <div>
+              <span className="detail-desc-title">리뷰:</span>
+              <span className="detail-desc-title">
+                {lensDetail.reviewcount}
+              </span>
+            </div>
+            <div>
+              <span className="detail-desc-title">브랜드:</span>
+              <span className="detail-desc-title">{lensDetail.brand}</span>
+            </div>
           </div>
         </div>
         <div className="detail-sub-desc">
@@ -116,7 +139,7 @@ export default function LensDetailInfoUp({
             </div>
             <div>
               {!lensDetail.color_img ? (
-                <span>색상 이미지 없음</span>
+                <span className="none-color"></span>
               ) : (
                 <img
                   src={lensDetail.color_img}

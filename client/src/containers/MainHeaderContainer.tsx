@@ -22,7 +22,7 @@ const HeaderContainer = styled.header`
     font-family: "PT Sans", sans-serif;
     color: #505050;
     font-weight: normal;
-    font-size: 33px;
+    font-size: 35px;
   }
 
   .main-logo-link {
@@ -81,17 +81,17 @@ export default function MainHeaderContainer({
         <div className="main-features">
           <div>
             <Link to="/filter">
-              <FiFilter size={23} color="#6e6e6e" />
+              <FiFilter size={26} color="#6e6e6e" />
             </Link>
           </div>
           <div>
             <Link to="/search">
-              <FiSearch size={23} color="#6e6e6e" />
+              <FiSearch size={26} color="#6e6e6e" />
             </Link>
           </div>
           <div>
             <Link to="/menu">
-              <FiMenu size={23} color="#6e6e6e" />
+              <FiMenu size={26} color="#6e6e6e" />
             </Link>
           </div>
         </div>

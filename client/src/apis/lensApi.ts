@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IBrands, IColors, IDays, ILens } from "../types/lens";
+import { IBrands, IColors, IDays, ILens, ILensItem } from "../types/lens";
 
 export default class LensApi {
   async getAllLensList(): Promise<Array<ILens>> {
@@ -8,7 +8,7 @@ export default class LensApi {
     return allLenslist;
   }
 
-  async getLenslistByPeriod(period: string) {
+  async getLenslistByPeriod(period: string): Promise<ILensItem[]> {
     const res = await axios.get(`/products/list/${period}`);
     return res.data;
   }

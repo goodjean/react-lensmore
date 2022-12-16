@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { IDays } from "../types/lens";
 
 const MainNavBarItemBox = styled.div`
-  padding: 8px 18px 16px 18px;
+  padding: 7.7px 18px 16px 18px;
   color: #aeaeae;
   cursor: pointer;
 

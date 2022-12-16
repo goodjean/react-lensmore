@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const LensListByBrandBox = styled.article`
   width: 100%;
-  padding: 20px 0;
+  padding: 30px 0;
 
   h3 {
     padding: 14px 0px;

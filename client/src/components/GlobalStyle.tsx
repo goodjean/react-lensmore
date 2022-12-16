@@ -26,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .wrap-inner {
-    width: 67%;
+    width: 45%;
     // min-width: 493px; (before px)
     // min-width: 500px;
     height: 100%;

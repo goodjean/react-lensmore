@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LensApi from "../apis/lensApi";
 import NavBarToBackAndHome from "../components/NavBarToBackAndHome";
-import SwiperContainer from "../containers/SwiperContainer";
+import DaysLensList from "../containers/DaysLensList";
 import { ILensItem } from "../types/lens";
 
-export default function OnedayLensPage() {
+export default function DaysLensPage() {
   const { period } = useParams();
   const [lensList, setLensList] = useState<ILensItem[]>([]);
 
@@ -21,13 +21,11 @@ export default function OnedayLensPage() {
     })();
   }, [period]);
 
-  console.log(lensList);
-
   return (
     <div className="wrap">
       <div className="wrap-inner">
         <NavBarToBackAndHome title={period} />
-        <SwiperContainer />
+        <DaysLensList lensList={lensList} />
       </div>
     </div>
   );

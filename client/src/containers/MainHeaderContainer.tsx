@@ -94,6 +94,9 @@ export default function MainHeaderContainer({
               <FiMenu size={26} color="#6e6e6e" />
             </Link>
           </div>
+          <div>
+            <Link to="/filter-test">필터</Link>
+          </div>
         </div>
       </div>
       <nav className="main-nav">

@@ -62,13 +62,7 @@ function FilterPage() {
 
   function clickButton() {
     navigate("/filter/results", {
-      state: [
-        periodStates,
-        colorStates,
-        graphicStates,
-        priceStates,
-        brandStates,
-      ],
+      state: [periodStates, colorStates, graphicStates, priceStates, brandStates],
     });
   }
 

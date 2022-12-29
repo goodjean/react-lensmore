@@ -2,26 +2,33 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const MenuCommunCategoryStyle = styled.div`
+  // background-color: pink;
   width: 100%;
-  height: 25%;
+  height: 30%;
   padding: 10px 32px 0;
 
   .intro-service {
+    // background-color: yellow;
     width: 100%;
-    height: 100%;
+    height: 50%;
     display: flex;
     justify-content: space-between;
     margin-top: 14px;
     list-style: none;
 
     li {
+      // background-color: red;
       width: 30%;
-      height: 100%;
+      height: 90%;
     }
 
     a {
-      display: block;
-      text-align: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // text-align: center;
       padding: 12px;
       border: 2px solid #e1e1e1;
       border-radius: 12px;

@@ -27,10 +27,18 @@ import {
 
 const connection = mysql.createConnection(dbConfig);
 
+const users: { id: string; password: string; name: string }[] = [
+  // { id: "goodjean", password: "1234" },
+  // { id: "goodjob", password: "5678" },
+  // { id: "lyj4397", password: "91011" },
+];
+
+const session: {
+  [key: string]: { id: string; password: string; name: string };
+} = {};
+
 export default class LensRepo {
-  convertLensDetailPageEntityToDomainModel(
-    lensDetailPageEntity: ILensDetailEntity[]
-  ): ILensDetail[] {
+  convertLensDetailPageEntityToDomainModel(lensDetailPageEntity: ILensDetailEntity[]): ILensDetail[] {
     return lensDetailPageEntity.map((ld) => ({
       id: ld.id,
       name: ld.name,
@@ -59,13 +67,10 @@ export default class LensRepo {
 
   getLensBrandList(): Promise<IBrands[]> {
     return new Promise((resolve) => {
-      connection.query<IBrandsEntity[]>(
-        "SELECT * FROM brands;",
-        (err, rows) => {
-          if (err) throw err;
-          resolve(rows);
-        }
-      );
+      connection.query<IBrandsEntity[]>("SELECT * FROM brands;", (err, rows) => {
+        if (err) throw err;
+        resolve(rows);
+      });
     });
   }
 
@@ -80,13 +85,10 @@ export default class LensRepo {
 
   getLensColorList(): Promise<IColors[]> {
     return new Promise((resolve) => {
-      connection.query<IColorsEntity[]>(
-        "SELECT * FROM colors;",
-        (err, rows) => {
-          if (err) throw err;
-          resolve(rows);
-        }
-      );
+      connection.query<IColorsEntity[]>("SELECT * FROM colors;", (err, rows) => {
+        if (err) throw err;
+        resolve(rows);
+      });
     });
   }
 
@@ -116,10 +118,7 @@ export default class LensRepo {
     });
   }
 
-  getProductsByPeriodAndBrandId(
-    period: string,
-    brandId: number
-  ): Promise<ILensItem[]> {
+  getProductsByPeriodAndBrandId(period: string, brandId: number): Promise<ILensItem[]> {
     return new Promise((resolve) => {
       connection.query<ILensItemEntity[]>(
         `SELECT id, name, price, img, reviewcount FROM lens WHERE period_classifi=? AND brand_id=?;`,
@@ -146,25 +145,19 @@ export default class LensRepo {
 
   getProductByHotKeyword(): Promise<IHotKeyword[]> {
     return new Promise((resolve) => {
-      connection.query<IHotKeywordEntity[]>(
-        "SELECT id, name, reviewcount FROM lens;",
-        (err, rows) => {
-          if (err) throw err;
-          resolve(rows);
-        }
-      );
+      connection.query<IHotKeywordEntity[]>("SELECT id, name, reviewcount FROM lens;", (err, rows) => {
+        if (err) throw err;
+        resolve(rows);
+      });
     });
   }
 
   getLensitemListByKeyword(): Promise<ILensItemByKeyword[]> {
     return new Promise((resolve) => {
-      connection.query<ILensItemEntityByKeyword[]>(
-        "SELECT id, name, price, img FROM lens;",
-        (err, rows) => {
-          if (err) throw err;
-          resolve(rows);
-        }
-      );
+      connection.query<ILensItemEntityByKeyword[]>("SELECT id, name, price, img FROM lens;", (err, rows) => {
+        if (err) throw err;
+        resolve(rows);
+      });
     });
   }
 
@@ -179,23 +172,121 @@ export default class LensRepo {
       connection.query<IFilteredLensListEntity[]>(
         `SELECT lens.id, name, price, img FROM lens LEFT JOIN days ON lens.period_classifi = days.en LEFT JOIN colors ON lens.color_id = colors.id LEFT JOIN brands ON lens.brand_id = brands.id WHERE days.ko IN (${period.map(
           (p) => `"${p}"`
-        )}) AND colors.color IN (${color.map(
-          (c) => `"${c}"`
-        )}) AND brands.ko_name IN (${brand.map(
+        )}) AND colors.color IN (${color.map((c) => `"${c}"`)}) AND brands.ko_name IN (${brand.map(
           (b) => `"${b}"`
-        )}) AND lens.price >= cast(${
-          price[0]
-        } as unsigned) AND lens.price < cast(${
+        )}) AND lens.price >= cast(${price[0]} as unsigned) AND lens.price < cast(${
           price[1]
-        } as unsigned) AND lens.graphic >= cast(${
-          graphic[0]
-        } as unsigned) AND lens.graphic <= cast(${graphic[1]} as unsigned);`,
+        } as unsigned) AND lens.graphic >= cast(${graphic[0]} as unsigned) AND lens.graphic <= cast(${
+          graphic[1]
+        } as unsigned);`,
         (err, rows) => {
           if (err) throw err;
           console.log(rows);
           resolve(rows);
         }
       );
+    });
+  }
+
+  login(userId: string, userPassword: string): string | boolean {
+    const user = users.find((u) => u.id === userId && u.password === userPassword);
+    if (user) {
+      const privateKey = String(Math.floor(Math.random() * 1000000000));
+      session[privateKey] = user;
+      return privateKey;
+    } else {
+      return false;
+    }
+  }
+
+  getUserId(sessionId: string) {
+    const userId = session[sessionId];
+    const userInfo = users.find((user) => user.id === userId.id);
+    return userInfo;
+  }
+
+  signup(userId: string, userPassword: string, userName: string): { id: string; password: string; name: string } {
+    let newUser = { id: userId, password: userPassword, name: userName };
+    users.push(newUser);
+    return newUser;
+  }
+
+  getFilterLensTest(
+    period: string[],
+    color: number[],
+    graphic: { min: number; max: number; isPositive: boolean }[],
+    price: { min: number; max: number; isPositive: boolean }[],
+    brand: number[]
+  ): Promise<IFilteredLensList[]> {
+    return new Promise((resolve) => {
+      if (!graphic[0].isPositive) {
+        if (!price[0].isPositive) {
+          connection.query<IFilteredLensListEntity[]>(
+            `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+              (p) => `"${p}"`
+            )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+              (b) => `"${b}"`
+            )}) AND price NOT BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+              price[0].max
+            } as unsigned) AND lens.graphic NOT BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+              graphic[0].max
+            } as unsigned);`,
+            (err, rows) => {
+              if (err) throw err;
+              resolve(rows);
+            }
+          );
+        } else {
+          ///해야할것 graphic 소수점 고치기, 부정문 긍정문(posi, nega에 따른 between, not between, css, 원래 필터에 옮기기, brand페이지, 혹시 안되면 result페이지에 있는거 다 되돌리기)
+          connection.query<IFilteredLensListEntity[]>(
+            `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+              (p) => `"${p}"`
+            )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+              (b) => `"${b}"`
+            )}) AND price BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+              price[0].max
+            } as unsigned) AND lens.graphic NOT BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+              graphic[0].max
+            } as unsigned);`,
+            (err, rows) => {
+              if (err) throw err;
+              resolve(rows);
+            }
+          );
+        }
+      } else if (!price[0].isPositive) {
+        connection.query<IFilteredLensListEntity[]>(
+          `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+            (p) => `"${p}"`
+          )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+            (b) => `"${b}"`
+          )}) AND price NOT BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+            price[0].max
+          } as unsigned) AND lens.graphic BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+            graphic[0].max
+          } as unsigned);`,
+          (err, rows) => {
+            if (err) throw err;
+            resolve(rows);
+          }
+        );
+      } else {
+        connection.query<IFilteredLensListEntity[]>(
+          `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+            (p) => `"${p}"`
+          )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+            (b) => `"${b}"`
+          )}) AND price BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+            price[0].max
+          } as unsigned) AND lens.graphic BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+            graphic[0].max
+          } as unsigned);`,
+          (err, rows) => {
+            if (err) throw err;
+            resolve(rows);
+          }
+        );
+      }
     });
   }
 }

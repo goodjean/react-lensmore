@@ -20,7 +20,7 @@ const LensListByBrandBox = styled.article`
     margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
-    gap: 3px;
+    gap: 20px;
   }
 `;
 

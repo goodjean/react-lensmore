@@ -91,3 +91,11 @@ export type ReqQuery = {
   price: string[];
   brand: string[];
 };
+
+export type ReqQueryTest = {
+  period: string[];
+  color: number[];
+  graphic: { min: number; max: number; isPositive: string }[];
+  price: { min: number; max: number; isPositive: string }[];
+  brand: number[];
+};

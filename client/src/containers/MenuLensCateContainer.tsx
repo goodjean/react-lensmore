@@ -6,7 +6,7 @@ import { IDays } from "../types/lens";
 
 const MenuLensCategoryStyle = styled.div`
   width: 100%;
-  height: 60%;
+  height: 340px;
   display: flex;
   flex-direction: column;
   padding: 60px 32px 0;
@@ -22,7 +22,7 @@ const MenuLensCategoryStyle = styled.div`
   }
   li {
     width: 30%;
-    height: 75%;
+    height: 70%;
     border: 2px solid #e1e1e1;
     border-radius: 12px;
     padding: 10px;
@@ -34,17 +34,17 @@ const MenuLensCategoryStyle = styled.div`
 
   li.oneday {
     background: url("https://o-lens.com/assets/images/common/ico-r1.png")
-      no-repeat 50% 34%;
+      no-repeat 50% 25%;
   }
 
   li.weekly-1month {
     background: url("https://o-lens.com/assets/images/common/ico-r2.png")
-      no-repeat 50% 34%;
+      no-repeat 50% 25%;
   }
 
   li.long-term {
     background: url("https://o-lens.com/assets/images/common/ico-r4.png")
-      no-repeat 50% 34%;
+      no-repeat 50% 25%;
   }
 
   a {
@@ -52,10 +52,10 @@ const MenuLensCategoryStyle = styled.div`
     height: auto;
     padding: 30px 0;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.54;
     font-weight: bold;
-    padding-bottom: 21%;
+    padding-bottom: 8%;
   }
 `;
 
@@ -72,7 +72,7 @@ export default function MenuLensCateContainer() {
 
   return (
     <MenuLensCategoryStyle>
-      <h2>렌즈구분</h2>
+      <h3>렌즈구분</h3>
       <ul className="lens-by-period">
         {days.map((day) => (
           <MenuLensCateItem key={day.id} day={day} />

@@ -32,9 +32,7 @@ export default class LensService {
 
   async getPromotionProducts(period: string): Promise<IPromotion | undefined> {
     const promotionEntites = await this.lensRepo.getPromotionProducts(period);
-    const promotion = promotionEntites.filter(
-      (prom) => prom.model_thumbnail !== undefined
-    );
+    const promotion = promotionEntites.filter((prom) => prom.model_thumbnail !== undefined);
     return promotion[2];
   }
 
@@ -43,14 +41,8 @@ export default class LensService {
     return lenslistByPeriod;
   }
 
-  async getProductsByPeriodAndBrandId(
-    period: string,
-    brandId: number
-  ): Promise<ILensItem[]> {
-    const lensItems = await this.lensRepo.getProductsByPeriodAndBrandId(
-      period,
-      brandId
-    );
+  async getProductsByPeriodAndBrandId(period: string, brandId: number): Promise<ILensItem[]> {
+    const lensItems = await this.lensRepo.getProductsByPeriodAndBrandId(period, brandId);
     lensItems.sort(function (a, b) {
       return b.reviewcount - a.reviewcount;
     });
@@ -65,9 +57,7 @@ export default class LensService {
   }
 
   async getProductsByHotKeyword(): Promise<IHotKeyword[]> {
-    const productListByHotKeyword = await (
-      await this.lensRepo.getProductByHotKeyword()
-    ).slice(0, 10);
+    const productListByHotKeyword = await (await this.lensRepo.getProductByHotKeyword()).slice(0, 10);
     productListByHotKeyword.sort(function (a, b) {
       return b.reviewcount - a.reviewcount;
     });
@@ -76,9 +66,7 @@ export default class LensService {
 
   async getLensitemListByKeyword(name: string): Promise<ILensItemByKeyword[]> {
     const productList = await this.lensRepo.getLensitemListByKeyword();
-    const productListByKeyword = productList?.filter((lens) =>
-      lens.name.includes(name)
-    );
+    const productListByKeyword = productList?.filter((lens) => lens.name.includes(name));
     return productListByKeyword;
   }
 
@@ -111,12 +99,36 @@ export default class LensService {
         priceList = priceSpl.map((pc) => Number(pc));
       }
     });
-    return await this.lensRepo.getFilteredLenslist(
-      period,
-      color,
-      graphicList,
-      priceList,
-      brand
-    );
+    return await this.lensRepo.getFilteredLenslist(period, color, graphicList, priceList, brand);
+  }
+
+  async login(userId: string, userPassword: string) {
+    const userInfo = this.lensRepo.login(userId, userPassword);
+    return userInfo;
+  }
+
+  async getUserInfo(sessionId: string) {
+    const userInfo = this.lensRepo.getUserId(sessionId);
+    console.log(userInfo);
+    return userInfo;
+  }
+
+  signup(userId: string, userPassword: string, userName: string): boolean {
+    const userInfo = this.lensRepo.signup(userId, userPassword, userName);
+    if (userInfo.id === userId) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async getFilterLensTest(
+    period: string[],
+    color: number[],
+    graphic: { min: number; max: number; isPositive: boolean }[],
+    price: { min: number; max: number; isPositive: boolean }[],
+    brand: number[]
+  ): Promise<IFilteredLensList[]> {
+    return await this.lensRepo.getFilterLensTest(period, color, graphic, price, brand);
   }
 }

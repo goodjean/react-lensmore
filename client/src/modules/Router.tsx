@@ -9,7 +9,12 @@ import SearchResultPage from "../pages/SearchResultPage";
 import FilterPage from "../pages/FilterPage";
 import FilterResultPage from "../pages/FilterResultPage";
 import MenuPage from "../pages/MenuPage";
-import OnedayLensPage from "../pages/OnedayLensPage";
+import DaysLensPage from "../pages/DaysLensPage";
+import MyPage from "../pages/MyPage";
+import SignInPage from "../pages/SignInPage";
+import SignUpPage from "../pages/SignUpPage";
+import FTPage from "../Filter/FTPage";
+import FTResultPage from "../Filter/FTResultPage";
 
 export default function Router() {
   return (
@@ -24,7 +29,12 @@ export default function Router() {
           <Route path="/filter" element={<FilterPage />} />
           <Route path="/filter/results" element={<FilterResultPage />} />
           <Route path="/menu" element={<MenuPage />} />
-          <Route path="/menu/lens-list/:period" element={<OnedayLensPage />} />
+          <Route path="/menu/lens-list/:period" element={<DaysLensPage />} />
+          <Route path="/my-page" element={<MyPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/filter-test" element={<FTPage />} />
+          <Route path="/filter-test/result" element={<FTResultPage />} />
         </Routes>
       </BrowserRouter>
     </>

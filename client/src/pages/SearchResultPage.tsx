@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SearchApi from "../apis/searchApi";
-import LenslistItem from "../components/LenslistItem";
 import NavBarToBackAndHome from "../components/NavBarToBackAndHome";
+import LensResultListContainer from "../containers/LensResultListContainer";
 import { ILensItem } from "../types/lens";
 
 function SearchResultsPage() {
@@ -27,23 +27,7 @@ function SearchResultsPage() {
     <div className="wrap">
       <div className="wrap-inner">
         <NavBarToBackAndHome title={name} />
-        {lensItemsByKeyword.length ? (
-          <div>
-            <h4>검색결과</h4>
-            {lensItemsByKeyword.map((lens) => (
-              <LenslistItem key={lens.id} lens={lens} />
-            ))}
-          </div>
-        ) : (
-          <div>
-            <img
-              src="https://o-lens.com/assets/images/common/ico-i2.png"
-              alt="no-data"
-              style={{ width: 40 }}
-            />
-            <h3>검색결과가 없습니다.</h3>
-          </div>
-        )}
+        <LensResultListContainer lensList={lensItemsByKeyword} />
       </div>
     </div>
   );

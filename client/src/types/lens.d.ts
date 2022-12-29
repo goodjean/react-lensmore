@@ -47,3 +47,10 @@ export interface IFilterLens {
   price: number;
   img: string;
 }
+
+export interface IFilterLensTest {
+  id: number;
+  name: string;
+  price: number;
+  img: string;
+}

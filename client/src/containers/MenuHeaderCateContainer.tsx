@@ -1,8 +1,11 @@
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import UserApi from "../apis/userApi";
 
 const MenuHeaderCategoryStyle = styled.ul`
   width: 100%;
-  height: 11%;
+  height: 10%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -18,7 +21,7 @@ const MenuHeaderCategoryStyle = styled.ul`
       align-items: center;
       width: 100%;
       height: 100%;
-      font-size: 18px;
+      font-size: 17px;
       line-height: 1.54;
       border-bottom: 2px solid #e1e1e1;
       background-color: #f6f6f6;
@@ -35,16 +38,34 @@ const MenuHeaderCategoryStyle = styled.ul`
 `;
 
 export default function MenuHeaderCateContainer() {
+  const navigate = useNavigate();
+
+  async function goMyPage() {
+    const userApi = new UserApi();
+    const userInfo = await userApi.goMyPage();
+    if (userInfo) {
+      navigate("/my-page", { state: userInfo });
+    } else {
+      navigate("/signin");
+    }
+  }
+
   return (
     <MenuHeaderCategoryStyle>
       <li>
-        <div className="my-page">마이페이지</div>
+        <div className="my-page" onClick={goMyPage}>
+          마이페이지
+        </div>
       </li>
       <li>
-        <div className="wishlist">찜목록</div>
+        <div className="wishlist" onClick={() => navigate("/wishlist")}>
+          찜목록
+        </div>
       </li>
       <li>
-        <div className="menu-brand">브랜드</div>
+        <div className="menu-brand" onClick={() => navigate("/menu-brand")}>
+          브랜드
+        </div>
       </li>
     </MenuHeaderCategoryStyle>
   );

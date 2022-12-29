@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const LensItemByBrandBox = styled.div`
   background-color: #f3f4f6;
-  width: 32.5%;
+  width: 100%;
   height: 263px;
   display: flex;
   flex-direction: column;
@@ -31,12 +31,12 @@ const LensItemByBrandBox = styled.div`
   .lens-item-info {
     width: 100%;
     height: 32%;
-    padding: 7px;
+    padding: 2px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.3;
     cursor: pointer;
 
@@ -50,11 +50,12 @@ const LensItemByBrandBox = styled.div`
       font-weight: bold;
     }
     .lens-graphic {
-      font-size: 16px;
+      font-size: 15px;
       width: 82%;
       heigth: 30%;
       text-align: center;
       font-weight: bold;
+      padding-bottom: 5px;
       // color: #787878;
     }
   }

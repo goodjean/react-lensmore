@@ -6,15 +6,14 @@ import LensDetailPage from "../pages/LensDetailPage";
 import GlobalStyle from "../components/GlobalStyle";
 import SearchPage from "../pages/SearchPage";
 import SearchResultPage from "../pages/SearchResultPage";
-import FilterPage from "../pages/FilterPage";
-import FilterResultPage from "../pages/FilterResultPage";
 import MenuPage from "../pages/MenuPage";
 import DaysLensPage from "../pages/DaysLensPage";
 import MyPage from "../pages/MyPage";
 import SignInPage from "../pages/SignInPage";
 import SignUpPage from "../pages/SignUpPage";
-import FTPage from "../Filter/FTPage";
-import FTResultPage from "../Filter/FTResultPage";
+import FilterPage from "../pages/FilterPage";
+import FilterResultPage from "../pages/FilterResultPage";
+import BrandPage from "../pages/BrandPage";
 
 export default function Router() {
   return (
@@ -30,11 +29,10 @@ export default function Router() {
           <Route path="/filter/results" element={<FilterResultPage />} />
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/menu/lens-list/:period" element={<DaysLensPage />} />
+          <Route path="/menu/brand" element={<BrandPage />} />
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/filter-test" element={<FTPage />} />
-          <Route path="/filter-test/result" element={<FTResultPage />} />
         </Routes>
       </BrowserRouter>
     </>

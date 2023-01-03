@@ -6,10 +6,14 @@ import HotSearchKeywordListContainer from "../containers/HotSearchKeywordListCon
 const SearchPageMainStyle = styled.main`
   width: 100%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 
   .hot-keyword {
-    font-size: 17px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 30px 32px 18px;
+    border-bottom: 2px solid #e1e1e1;
   }
 `;
 

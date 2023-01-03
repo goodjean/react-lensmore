@@ -5,7 +5,7 @@ import UserApi from "../apis/userApi";
 
 const MenuHeaderCategoryStyle = styled.ul`
   width: 100%;
-  height: 10%;
+  height: 8%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -63,7 +63,7 @@ export default function MenuHeaderCateContainer() {
         </div>
       </li>
       <li>
-        <div className="menu-brand" onClick={() => navigate("/menu-brand")}>
+        <div className="menu-brand" onClick={() => navigate("/menu/brand")}>
           브랜드
         </div>
       </li>

@@ -163,56 +163,6 @@ export default class LensRepo {
 
   getFilteredLenslist(
     period: string[],
-    color: string[],
-    graphic: number[],
-    price: number[],
-    brand: string[]
-  ): Promise<IFilteredLensList[]> {
-    return new Promise((resolve) => {
-      connection.query<IFilteredLensListEntity[]>(
-        `SELECT lens.id, name, price, img FROM lens LEFT JOIN days ON lens.period_classifi = days.en LEFT JOIN colors ON lens.color_id = colors.id LEFT JOIN brands ON lens.brand_id = brands.id WHERE days.ko IN (${period.map(
-          (p) => `"${p}"`
-        )}) AND colors.color IN (${color.map((c) => `"${c}"`)}) AND brands.ko_name IN (${brand.map(
-          (b) => `"${b}"`
-        )}) AND lens.price >= cast(${price[0]} as unsigned) AND lens.price < cast(${
-          price[1]
-        } as unsigned) AND lens.graphic >= cast(${graphic[0]} as unsigned) AND lens.graphic <= cast(${
-          graphic[1]
-        } as unsigned);`,
-        (err, rows) => {
-          if (err) throw err;
-          console.log(rows);
-          resolve(rows);
-        }
-      );
-    });
-  }
-
-  login(userId: string, userPassword: string): string | boolean {
-    const user = users.find((u) => u.id === userId && u.password === userPassword);
-    if (user) {
-      const privateKey = String(Math.floor(Math.random() * 1000000000));
-      session[privateKey] = user;
-      return privateKey;
-    } else {
-      return false;
-    }
-  }
-
-  getUserId(sessionId: string) {
-    const userId = session[sessionId];
-    const userInfo = users.find((user) => user.id === userId.id);
-    return userInfo;
-  }
-
-  signup(userId: string, userPassword: string, userName: string): { id: string; password: string; name: string } {
-    let newUser = { id: userId, password: userPassword, name: userName };
-    users.push(newUser);
-    return newUser;
-  }
-
-  getFilterLensTest(
-    period: string[],
     color: number[],
     graphic: { min: number; max: number; isPositive: boolean }[],
     price: { min: number; max: number; isPositive: boolean }[],
@@ -288,5 +238,28 @@ export default class LensRepo {
         );
       }
     });
+  }
+
+  login(userId: string, userPassword: string): string | boolean {
+    const user = users.find((u) => u.id === userId && u.password === userPassword);
+    if (user) {
+      const privateKey = String(Math.floor(Math.random() * 1000000000));
+      session[privateKey] = user;
+      return privateKey;
+    } else {
+      return false;
+    }
+  }
+
+  getUserId(sessionId: string) {
+    const userId = session[sessionId];
+    const userInfo = users.find((user) => user.id === userId.id);
+    return userInfo;
+  }
+
+  signup(userId: string, userPassword: string, userName: string): { id: string; password: string; name: string } {
+    let newUser = { id: userId, password: userPassword, name: userName };
+    users.push(newUser);
+    return newUser;
   }
 }

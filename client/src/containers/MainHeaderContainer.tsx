@@ -58,10 +58,7 @@ type MainHeaderContainerProps = {
   setPeriod: Dispatch<SetStateAction<string>>;
 };
 
-export default function MainHeaderContainer({
-  period,
-  setPeriod,
-}: MainHeaderContainerProps) {
+export default function MainHeaderContainer({ period, setPeriod }: MainHeaderContainerProps) {
   const [days, setDays] = useState<IDays[]>([]);
 
   useEffect(() => {
@@ -94,19 +91,11 @@ export default function MainHeaderContainer({
               <FiMenu size={26} color="#6e6e6e" />
             </Link>
           </div>
-          <div>
-            <Link to="/filter-test">필터</Link>
-          </div>
         </div>
       </div>
       <nav className="main-nav">
         {days.map((day) => (
-          <MainNavBar
-            key={day.id}
-            day={day}
-            state={period === day.en ? "on" : ""}
-            setPeriod={setPeriod}
-          />
+          <MainNavBar key={day.id} day={day} state={period === day.en ? "on" : ""} setPeriod={setPeriod} />
         ))}
       </nav>
     </HeaderContainer>

@@ -22,6 +22,11 @@ export interface IBrandsEntity extends RowDataPacket {
   id: number;
   en_name: string;
   ko_name: string;
+  url: string;
+  thumbnail: string;
+  sub_img1: string;
+  sub_img2: string;
+  sub_img3: string;
 }
 
 export interface IDaysEntity extends RowDataPacket {

@@ -72,34 +72,12 @@ export default class LensService {
 
   async getFilteredLenslist(
     period: string[],
-    color: string[],
-    graphic: string[],
-    price: string[],
-    brand: string[]
+    color: number[],
+    graphic: { min: number; max: number; isPositive: boolean }[],
+    price: { min: number; max: number; isPositive: boolean }[],
+    brand: number[]
   ): Promise<IFilteredLensList[]> {
-    let graphicList: number[] = [];
-
-    graphic.forEach((gp) => {
-      if (gp === "13.7 ~") {
-        graphicList = [13.7, 16];
-      } else {
-        const graphicSpl = gp.split("~");
-        graphicList = graphicSpl.map((gp) => Number(gp));
-      }
-    });
-
-    let priceList: number[] = [];
-
-    price.forEach((pc) => {
-      const priceRpl = pc.replace("원", "").replace("이상", "").trim();
-      if (priceRpl === "30000") {
-        priceList = [30000, 300000];
-      } else {
-        const priceSpl = priceRpl.split("~");
-        priceList = priceSpl.map((pc) => Number(pc));
-      }
-    });
-    return await this.lensRepo.getFilteredLenslist(period, color, graphicList, priceList, brand);
+    return await this.lensRepo.getFilteredLenslist(period, color, graphic, price, brand);
   }
 
   async login(userId: string, userPassword: string) {
@@ -120,15 +98,5 @@ export default class LensService {
     } else {
       return false;
     }
-  }
-
-  async getFilterLensTest(
-    period: string[],
-    color: number[],
-    graphic: { min: number; max: number; isPositive: boolean }[],
-    price: { min: number; max: number; isPositive: boolean }[],
-    brand: number[]
-  ): Promise<IFilteredLensList[]> {
-    return await this.lensRepo.getFilterLensTest(period, color, graphic, price, brand);
   }
 }

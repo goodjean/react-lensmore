@@ -6,7 +6,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 
 const SearchNavBarContainer = styled.form`
   width: 100%;
-  height: 77px;
+  height: 88px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,13 +29,18 @@ const SearchNavBarContainer = styled.form`
 
   .inp-bx {
     width: 78%;
-    height: 56px;
+    height: 65px;
     padding: 18px 18px;
     border: 0;
     border-radius: 12px;
     outline: none;
+    color: #222;
     background-color: #f1f1f1;
-    font-size: 17px;
+    font-size: 20px;
+
+    &::placeholder {
+      color: #aeaeae;
+    }
   }
 `;
 

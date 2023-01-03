@@ -6,6 +6,7 @@ const MainNavBarItemBox = styled.div`
   padding: 7.7px 18px 16px 18px;
   color: #aeaeae;
   cursor: pointer;
+  font-size: 17px;
 
   .on {
     color: black;

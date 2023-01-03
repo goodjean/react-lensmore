@@ -10,6 +10,7 @@ const LensListByBrandBox = styled.article`
 
   h3 {
     padding: 14px 0px;
+    font-size: 19px;
   }
 
   .brand-best-list {
@@ -29,17 +30,13 @@ type LenslistContainerProps = {
   brand: IBrands;
 };
 
-export default function LenslistContainer({
-  period,
-  brand,
-}: LenslistContainerProps) {
+export default function LenslistContainer({ period, brand }: LenslistContainerProps) {
   const [lenslist, setLenslist] = useState<ILensItem[] | undefined>([]);
 
   useEffect(() => {
     (async () => {
       const lensApi = new LensApi();
-      const lenslistByPeriodAndBrand =
-        await lensApi.getLenslistByPeriodAndBrand(period, brand.id);
+      const lenslistByPeriodAndBrand = await lensApi.getLenslistByPeriodAndBrand(period, brand.id);
       setLenslist(lenslistByPeriodAndBrand);
     })();
   }, [period, brand.id]);

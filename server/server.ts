@@ -60,9 +60,11 @@ app.get("/search/results-keyword/:name", async (req, res) => {
   res.json(await lensService.getLensitemListByKeyword(name));
 });
 
-app.get("/filter/result-items", async (req: Request<{}, {}, {}, ReqQuery>, res) => {
+app.get("/filter/result-items", async (req: Request<{}, {}, {}, ReqQueryTest>, res) => {
   const { period, color, graphic, price, brand } = req.query;
-  res.json(await lensService.getFilteredLenslist(period, color, graphic, price, brand));
+  const graphicValue = graphic.map((g) => ({ ...g, isPositive: JSON.parse(g.isPositive) }));
+  const priceValue = price.map((p) => ({ ...p, isPositive: JSON.parse(p.isPositive) }));
+  res.json(await lensService.getFilteredLenslist(period, color, graphicValue, priceValue, brand));
 });
 
 app.get("/my-page", async (req, res) => {
@@ -95,13 +97,6 @@ app.post("/sign-in", async (req, res) => {
 app.post("/sign-up", async (req, res) => {
   const { userId, userPassword, userName } = req.body;
   res.json(lensService.signup(userId, userPassword, userName));
-});
-
-app.get("/filter-test/result-items", async (req: Request<{}, {}, {}, ReqQueryTest>, res) => {
-  const { period, color, graphic, price, brand } = req.query;
-  const graphicValue = graphic.map((g) => ({ ...g, isPositive: JSON.parse(g.isPositive) }));
-  const priceValue = price.map((p) => ({ ...p, isPositive: JSON.parse(p.isPositive) }));
-  res.json(await lensService.getFilterLensTest(period, color, graphicValue, priceValue, brand));
 });
 
 app.listen(port, () => {

@@ -25,9 +25,7 @@ type NavBarToBackAndHomeProps = {
   title: string;
 };
 
-export default function NavBarToBackAndHome({
-  title,
-}: NavBarToBackAndHomeProps) {
+export default function NavBarToBackAndHome({ title }: NavBarToBackAndHomeProps) {
   const navigate = useNavigate();
 
   return (

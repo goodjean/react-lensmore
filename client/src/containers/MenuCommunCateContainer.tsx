@@ -12,8 +12,9 @@ const MenuCommunCategoryStyle = styled.div`
     width: 100%;
     height: 50%;
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     margin-top: 14px;
+    gap: 30px;
     list-style: none;
 
     li {
@@ -43,9 +44,6 @@ export default function MenuCommunCateContainer() {
     <MenuCommunCategoryStyle>
       <h2>커뮤니티</h2>
       <ul className="intro-service">
-        <li>
-          <Link to={"/community/homepage"}>홈페이지 소개</Link>
-        </li>
         <li>
           <Link to={"/community/notice"}>공지사항</Link>
         </li>

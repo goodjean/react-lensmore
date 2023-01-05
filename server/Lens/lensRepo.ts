@@ -118,6 +118,19 @@ export default class LensRepo {
     });
   }
 
+  getLenslistByPeriodByOffset(period: string, page: number, limit: number): Promise<ILensItemByKeyword[]> {
+    return new Promise((resolve) => {
+      connection.query<ILensItemEntityByKeyword[]>(
+        `SELECT id, name, price, img FROM lens WHERE period_classifi=? LIMIT ${limit} OFFSET ${(page - 1) * limit}`,
+        [period],
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
+    });
+  }
+
   getProductsByPeriodAndBrandId(period: string, brandId: number): Promise<ILensItem[]> {
     return new Promise((resolve) => {
       connection.query<ILensItemEntity[]>(
@@ -158,6 +171,20 @@ export default class LensRepo {
         if (err) throw err;
         resolve(rows);
       });
+    });
+  }
+
+  getLensitemListByKeywordByOffset(name: string, page: number, limit: number): Promise<ILensItemByKeyword[]> {
+    const query = "%" + name + "%";
+    return new Promise((resolve) => {
+      connection.query<ILensItemEntityByKeyword[]>(
+        `SELECT id, name, price, img FROM lens WHERE name LIKE ? LIMIT ${limit} OFFSET ${(page - 1) * limit};`,
+        [query],
+        (err, rows) => {
+          if (err) throw err;
+          resolve(rows);
+        }
+      );
     });
   }
 
@@ -231,6 +258,87 @@ export default class LensRepo {
           } as unsigned) AND lens.graphic BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
             graphic[0].max
           } as unsigned);`,
+          (err, rows) => {
+            if (err) throw err;
+            resolve(rows);
+          }
+        );
+      }
+    });
+  }
+
+  getFilteredLenslistByOffset(
+    period: string[],
+    color: number[],
+    graphic: { min: number; max: number; isPositive: boolean }[],
+    price: { min: number; max: number; isPositive: boolean }[],
+    brand: number[],
+    page: number,
+    limit: number
+  ): Promise<IFilteredLensList[]> {
+    return new Promise((resolve) => {
+      if (!graphic[0].isPositive) {
+        if (!price[0].isPositive) {
+          connection.query<IFilteredLensListEntity[]>(
+            `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+              (p) => `"${p}"`
+            )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+              (b) => `"${b}"`
+            )}) AND price NOT BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+              price[0].max
+            } as unsigned) AND lens.graphic NOT BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+              graphic[0].max
+            } as unsigned) LIMIT ${limit} OFFSET ${(page - 1) * limit};`,
+            (err, rows) => {
+              if (err) throw err;
+              resolve(rows);
+            }
+          );
+        } else {
+          ///해야할것 graphic 소수점 고치기, 부정문 긍정문(posi, nega에 따른 between, not between, css, 원래 필터에 옮기기, brand페이지, 혹시 안되면 result페이지에 있는거 다 되돌리기)
+          connection.query<IFilteredLensListEntity[]>(
+            `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+              (p) => `"${p}"`
+            )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+              (b) => `"${b}"`
+            )}) AND price BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+              price[0].max
+            } as unsigned) AND lens.graphic NOT BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+              graphic[0].max
+            } as unsigned) LIMIT ${limit} OFFSET ${(page - 1) * limit};`,
+            (err, rows) => {
+              if (err) throw err;
+              resolve(rows);
+            }
+          );
+        }
+      } else if (!price[0].isPositive) {
+        connection.query<IFilteredLensListEntity[]>(
+          `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+            (p) => `"${p}"`
+          )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+            (b) => `"${b}"`
+          )}) AND price NOT BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+            price[0].max
+          } as unsigned) AND lens.graphic BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+            graphic[0].max
+          } as unsigned) LIMIT ${limit} OFFSET ${(page - 1) * limit};`,
+          (err, rows) => {
+            if (err) throw err;
+            resolve(rows);
+          }
+        );
+      } else {
+        connection.query<IFilteredLensListEntity[]>(
+          `SELECT id, name, price, img FROM lens WHERE period_classifi IN (${period.map(
+            (p) => `"${p}"`
+          )}) AND color_id IN (${color.map((c) => `"${c}"`)}) AND brand_id IN (${brand.map(
+            (b) => `"${b}"`
+          )}) AND price BETWEEN cast(${price[0].min} as unsigned) AND cast(${
+            price[0].max
+          } as unsigned) AND lens.graphic BETWEEN cast(${graphic[0].min} as unsigned) AND cast(${
+            graphic[0].max
+          } as unsigned) LIMIT ${limit} OFFSET ${(page - 1) * limit};`,
           (err, rows) => {
             if (err) throw err;
             resolve(rows);

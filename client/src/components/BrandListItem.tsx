@@ -54,9 +54,12 @@ function BrandListItem({ brand }: BrandListItemProps) {
       </div>
       <div className="brand-info-bx">
         <div className="info-up">
-          <h3 className="brand-name">{brand.ko_name}</h3>
+          <h3 className="brand-name">
+            <a href={brand.url} target="_blank" rel="noreferrer">
+              {brand.ko_name}
+            </a>
+          </h3>
           <a href={brand.url} target="_blank" rel="noreferrer" className="page-url">
-            {}
             홈페이지 방문하기
           </a>
         </div>

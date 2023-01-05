@@ -5,8 +5,7 @@ import { ILensItem } from "../types/lens";
 
 const LensResultListStyle = styled.div`
   width: 100%;
-  height: 100%;
-  padding-top: 40px;
+  padding-top: 35px;
 
   .lenslist-container {
     padding: 20px 20px;
@@ -34,9 +33,10 @@ const LensResultListStyle = styled.div`
 
 interface LensResultListProps {
   lensList: ILensItem[];
+  listCount: number;
 }
 
-function LensResultListContainer({ lensList }: LensResultListProps) {
+function LensResultListContainer({ lensList, listCount }: LensResultListProps) {
   return (
     <>
       {lensList.length === 0 ? (
@@ -48,7 +48,7 @@ function LensResultListContainer({ lensList }: LensResultListProps) {
         </LensResultListStyle>
       ) : (
         <LensResultListStyle>
-          <span className="result-count">{`전체 검색 결과 (${lensList.length})`}</span>
+          <span className="result-count">{`전체 검색 결과 (${listCount})`}</span>
           <ul className="lenslist-container">
             {lensList.map((lens) => (
               <LenslistItem key={lens.id} lens={lens} />

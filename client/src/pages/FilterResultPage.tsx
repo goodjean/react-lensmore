@@ -3,9 +3,22 @@ import { useLocation } from "react-router-dom";
 import FilterApi from "../apis/filterApi";
 import NavBarToBackAndHome from "../components/NavBarToBackAndHome";
 import LensResultListContainer from "../containers/LensResultListContainer";
+import PaginationList from "../containers/PaginationList";
 import { IFilterLensTest } from "../types/lens";
+import styled from "styled-components";
+
+const FilterResultPageStyle = styled.div`
+  width: 100%;
+  heigth: auto;
+  display: flex;
+  flex-direction: column;
+`;
 
 function FilterResultPage() {
+  const [limit, setLimit] = useState<number>(9);
+  const [page, setPage] = useState<number>(1);
+  const [listCount, setListCount] = useState<number>(0);
+  const [blockNum, setBlockNum] = useState(0);
   const { state } = useLocation();
   const [filterLenslist, setFilterLenslist] = useState<IFilterLensTest[]>([]);
 
@@ -18,8 +31,16 @@ function FilterResultPage() {
   useEffect(() => {
     (async () => {
       const filterApi = new FilterApi();
-      const lensList = await filterApi.getFilteredLensList(period, color, graphic, price, brand);
+      const lensList = await filterApi.getFilteredLensListByOffset(period, color, graphic, price, brand, page, limit);
       setFilterLenslist(lensList);
+    })();
+  }, [period, color, graphic, price, brand, page, limit]);
+
+  useEffect(() => {
+    (async () => {
+      const filterApi = new FilterApi();
+      const lensList = await filterApi.getAllFilteredLensList(period, color, graphic, price, brand);
+      setListCount(lensList.length);
     })();
   }, [period, color, graphic, price, brand]);
 
@@ -27,7 +48,17 @@ function FilterResultPage() {
     <div className="wrap">
       <div className="wrap-inner">
         <NavBarToBackAndHome title="필터결과" />
-        <LensResultListContainer lensList={filterLenslist} />
+        <FilterResultPageStyle>
+          <LensResultListContainer lensList={filterLenslist} listCount={listCount} />
+          <PaginationList
+            limit={limit}
+            page={page}
+            setPage={setPage}
+            blockNum={blockNum}
+            setBlockNum={setBlockNum}
+            listCount={listCount}
+          />
+        </FilterResultPageStyle>
       </div>
     </div>
   );

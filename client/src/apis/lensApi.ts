@@ -9,7 +9,12 @@ export default class LensApi {
   }
 
   async getLenslistByPeriod(period: string): Promise<ILensItem[]> {
-    const res = await axios.get(`/products/list/${period}`);
+    const res = await axios.get(`/products/all-period-list/${period}`);
+    return res.data;
+  }
+
+  async getLenslistByPeriodByOffset(period: string, page: number, limit: number): Promise<ILensItem[]> {
+    const res = await axios.get(`/products/period-list/${period}/${page}/${limit}`);
     return res.data;
   }
 

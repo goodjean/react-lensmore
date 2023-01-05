@@ -33,11 +33,16 @@ export default class LensService {
   async getPromotionProducts(period: string): Promise<IPromotion | undefined> {
     const promotionEntites = await this.lensRepo.getPromotionProducts(period);
     const promotion = promotionEntites.filter((prom) => prom.model_thumbnail !== undefined);
-    return promotion[2];
+    return promotion[3];
   }
 
   async getLenslistByPeriod(period: string): Promise<ILensItemByKeyword[]> {
     const lenslistByPeriod = await this.lensRepo.getLenslistByPeriod(period);
+    return lenslistByPeriod;
+  }
+
+  async getLenslistByPeriodByOffset(period: string, page: number, limit: number): Promise<ILensItemByKeyword[]> {
+    const lenslistByPeriod = await this.lensRepo.getLenslistByPeriodByOffset(period, page, limit);
     return lenslistByPeriod;
   }
 
@@ -70,6 +75,11 @@ export default class LensService {
     return productListByKeyword;
   }
 
+  async getLensitemListByKeywordByOffset(name: string, page: number, limit: number): Promise<ILensItemByKeyword[]> {
+    const productListByKeywordByOffset = await this.lensRepo.getLensitemListByKeywordByOffset(name, page, limit);
+    return productListByKeywordByOffset;
+  }
+
   async getFilteredLenslist(
     period: string[],
     color: number[],
@@ -78,6 +88,18 @@ export default class LensService {
     brand: number[]
   ): Promise<IFilteredLensList[]> {
     return await this.lensRepo.getFilteredLenslist(period, color, graphic, price, brand);
+  }
+
+  async getFilteredLenslistByOffset(
+    period: string[],
+    color: number[],
+    graphic: { min: number; max: number; isPositive: boolean }[],
+    price: { min: number; max: number; isPositive: boolean }[],
+    brand: number[],
+    page: number,
+    limit: number
+  ): Promise<IFilteredLensList[]> {
+    return await this.lensRepo.getFilteredLenslistByOffset(period, color, graphic, price, brand, page, limit);
   }
 
   async login(userId: string, userPassword: string) {

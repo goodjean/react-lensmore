@@ -31,7 +31,7 @@ const PriceContainerStyle = styled.div`
     }
 
     span {
-      width: 50%;
+      width: 14%;
       height: 100%;
       padding-top: 10px;
       text-align: end;

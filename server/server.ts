@@ -34,9 +34,16 @@ app.get("/promotion/products/:period", async (req, res) => {
   res.json(await lensService.getPromotionProducts(period));
 });
 
-app.get("/products/list/:period", async (req, res) => {
+app.get("/products/all-period-list/:period", async (req, res) => {
   const { period } = req.params;
   res.json(await lensService.getLenslistByPeriod(period));
+});
+
+app.get("/products/period-list/:period/:page/:limit", async (req, res) => {
+  const { period, page, limit } = req.params;
+  const pageNum = Number(page);
+  const limitNum = Number(limit);
+  res.json(await lensService.getLenslistByPeriodByOffset(period, pageNum, limitNum));
 });
 
 app.get("/products/list/:period/:brand", async (req, res) => {
@@ -55,16 +62,34 @@ app.get("/search/products/hot-keyword", async (req, res) => {
   res.json(await lensService.getProductsByHotKeyword());
 });
 
-app.get("/search/results-keyword/:name", async (req, res) => {
+app.get("/search/all-results-keyword/:name", async (req, res) => {
   const { name } = req.params;
   res.json(await lensService.getLensitemListByKeyword(name));
 });
 
-app.get("/filter/result-items", async (req: Request<{}, {}, {}, ReqQueryTest>, res) => {
+app.get("/search/results-keyword/:name/:page/:limit", async (req, res) => {
+  const { name, page, limit } = req.params;
+  const pageNum = Number(page);
+  const limitNum = Number(limit);
+  res.json(await lensService.getLensitemListByKeywordByOffset(name, pageNum, limitNum));
+});
+
+app.get("/filter/all-results", async (req: Request<{}, {}, {}, ReqQuery>, res) => {
   const { period, color, graphic, price, brand } = req.query;
   const graphicValue = graphic.map((g) => ({ ...g, isPositive: JSON.parse(g.isPositive) }));
   const priceValue = price.map((p) => ({ ...p, isPositive: JSON.parse(p.isPositive) }));
   res.json(await lensService.getFilteredLenslist(period, color, graphicValue, priceValue, brand));
+});
+
+app.get("/filter/result-items", async (req: Request<{}, {}, {}, ReqQueryTest>, res) => {
+  const { period, color, graphic, price, brand, page, limit } = req.query;
+  const graphicValue = graphic.map((g) => ({ ...g, isPositive: JSON.parse(g.isPositive) }));
+  const priceValue = price.map((p) => ({ ...p, isPositive: JSON.parse(p.isPositive) }));
+  const pageNum = Number(page);
+  const limitNum = Number(limit);
+  res.json(
+    await lensService.getFilteredLenslistByOffset(period, color, graphicValue, priceValue, brand, pageNum, limitNum)
+  );
 });
 
 app.get("/my-page", async (req, res) => {

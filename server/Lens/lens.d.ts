@@ -89,12 +89,20 @@ export interface IFilteredLensList {
   img: string;
 }
 
+// export type ReqQuery = {
+//   period: string[];
+//   color: string[];
+//   graphic: string[];
+//   price: string[];
+//   brand: string[];
+// };
+
 export type ReqQuery = {
   period: string[];
-  color: string[];
-  graphic: string[];
-  price: string[];
-  brand: string[];
+  color: number[];
+  graphic: { min: number; max: number; isPositive: string }[];
+  price: { min: number; max: number; isPositive: string }[];
+  brand: number[];
 };
 
 export type ReqQueryTest = {
@@ -103,4 +111,6 @@ export type ReqQueryTest = {
   graphic: { min: number; max: number; isPositive: string }[];
   price: { min: number; max: number; isPositive: string }[];
   brand: number[];
+  page: string;
+  limit: string;
 };

@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 const PromotionItemBox = styled.div`
   padding: 18px 9px;
   width: 100%;
-  height: 620px;
+  height: 640px;
 
   .promotion-img-box {
     width: 100%;
     height: 100%;
+    cursor: pointer;
   }
 
   .promotion-img {
@@ -47,11 +48,7 @@ function PromotionItem({ promotion }: PromotionItemProps) {
             alt="loading..."
           />
         ) : (
-          <img
-            src={promotion.model_thumbnail}
-            alt="promotion item"
-            className="promotion-img"
-          />
+          <img src={promotion.model_thumbnail} alt="promotion item" className="promotion-img" />
         )}
       </div>
     </PromotionItemBox>

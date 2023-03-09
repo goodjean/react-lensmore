@@ -14,6 +14,7 @@ import SignUpPage from "../pages/SignUpPage";
 import FilterPage from "../pages/FilterPage";
 import FilterResultPage from "../pages/FilterResultPage";
 import BrandPage from "../pages/BrandPage";
+import WishlistPage from "../pages/WishlistPage";
 
 export default function Router() {
   return (
@@ -33,6 +34,7 @@ export default function Router() {
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
         </Routes>
       </BrowserRouter>
     </>

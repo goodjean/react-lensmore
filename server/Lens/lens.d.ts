@@ -114,3 +114,7 @@ export type ReqQueryTest = {
   page: string;
   limit: string;
 };
+
+export type ReqQueryLensId = {
+  lensId: string;
+};

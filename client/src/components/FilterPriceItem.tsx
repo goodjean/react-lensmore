@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { IPrice, IPrices } from "../types/filter";
+import { IMinMax, IMinMaxText } from "../types/filter";
 import styled from "styled-components";
 
 const PriceItemStyle = styled.li`
@@ -35,9 +35,9 @@ const PriceItemStyle = styled.li`
 `;
 
 interface PriceItemProps {
-  price: IPrices;
-  priceFilterList: IPrice[];
-  setPriceFilterList: Dispatch<SetStateAction<IPrice[]>>;
+  price: IMinMaxText;
+  priceFilterList: IMinMax[];
+  setPriceFilterList: Dispatch<SetStateAction<IMinMax[]>>;
 }
 
 function FilterPriceItem({ price, priceFilterList, setPriceFilterList }: PriceItemProps) {

@@ -46,6 +46,18 @@ export default function MenuHeaderCateContainer() {
     if (userInfo) {
       navigate("/my-page", { state: userInfo });
     } else {
+      alert("로그인이 되어있지 않습니다.");
+      navigate("/signin");
+    }
+  }
+
+  async function goWishlistPage() {
+    const userApi = new UserApi();
+    const checkLogin = await userApi.checkLogin();
+    if (checkLogin) {
+      navigate("/wishlist");
+    } else {
+      alert("로그인이 되어있지 않습니다.");
       navigate("/signin");
     }
   }
@@ -58,7 +70,7 @@ export default function MenuHeaderCateContainer() {
         </div>
       </li>
       <li>
-        <div className="wishlist" onClick={() => navigate("/wishlist")}>
+        <div className="wishlist" onClick={goWishlistPage}>
           찜목록
         </div>
       </li>

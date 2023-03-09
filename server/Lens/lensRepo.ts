@@ -27,15 +27,11 @@ import {
 
 const connection = mysql.createConnection(dbConfig);
 
-const users: { id: string; password: string; name: string }[] = [
-  // { id: "goodjean", password: "1234" },
-  // { id: "goodjob", password: "5678" },
-  // { id: "lyj4397", password: "91011" },
-];
+const users: { id: string; password: string; name: string; wishlist: number[] }[] = [];
 
 const session: {
-  [key: string]: { id: string; password: string; name: string };
-} = {};
+  [key: string]: { id: string };
+} = {}; /////배열로 바꾸기
 
 export default class LensRepo {
   convertLensDetailPageEntityToDomainModel(lensDetailPageEntity: ILensDetailEntity[]): ILensDetail[] {
@@ -352,7 +348,7 @@ export default class LensRepo {
     const user = users.find((u) => u.id === userId && u.password === userPassword);
     if (user) {
       const privateKey = String(Math.floor(Math.random() * 1000000000));
-      session[privateKey] = user;
+      session[privateKey] = { id: user.id };
       return privateKey;
     } else {
       return false;
@@ -361,13 +357,66 @@ export default class LensRepo {
 
   getUserId(sessionId: string) {
     const userId = session[sessionId];
-    const userInfo = users.find((user) => user.id === userId.id);
-    return userInfo;
+    console.log("[sss]", userId);
+    const userInfo = users.find((user) => user.id === userId?.id);
+    return userInfo?.id;
+  }
+
+  getUserInfo(id: string) {
+    const userInfo = users.find((user) => user.id === id);
+    return { id: userInfo?.id, name: userInfo?.name };
   }
 
   signup(userId: string, userPassword: string, userName: string): { id: string; password: string; name: string } {
-    let newUser = { id: userId, password: userPassword, name: userName };
+    console.log(users);
+    let newUser = { id: userId, password: userPassword, name: userName, wishlist: [] };
     users.push(newUser);
     return newUser;
+  }
+
+  subscribeLens(sessionId: string, lensId: number) {
+    const userId = session[sessionId];
+    const foundUser = users.find((user) => user.id === userId.id);
+
+    if (!foundUser?.wishlist.includes(lensId)) {
+      foundUser?.wishlist.push(lensId);
+    } else {
+      foundUser?.wishlist.forEach((lenid, index) => {
+        if (lenid === lensId) {
+          foundUser.wishlist.splice(index, 1);
+        }
+      });
+    }
+    return foundUser?.wishlist; //
+  }
+
+  checkLogin(sessionId: string) {
+    const sessionCheck = session.hasOwnProperty(sessionId);
+    return sessionCheck;
+  }
+
+  getWishList(sessionId: string): Promise<ILensItemByKeyword[]> {
+    const userId = session[sessionId];
+    const foundUser = users.find((user) => user.id === userId.id);
+    const wishListId = foundUser?.wishlist;
+
+    return new Promise((resolve) => {
+      if (wishListId?.length) {
+        connection.query<ILensItemEntityByKeyword[]>(
+          `SELECT id, name, price, img FROM lens WHERE id IN (${wishListId.map((p) => `"${p}"`)})`,
+          (err, rows) => {
+            if (err) throw err;
+            resolve(rows);
+          }
+        );
+      } else {
+        resolve([]);
+      }
+    });
+  }
+
+  logout(sessionId: string): string {
+    delete session[sessionId];
+    return "success";
   }
 }

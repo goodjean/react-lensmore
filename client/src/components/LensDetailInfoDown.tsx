@@ -41,29 +41,24 @@ type LensDetailInfoDownProps = {
   lensDetail: ILensDetail;
 };
 
-export default function LensDetailInfoDown({
-  lensDetail,
-}: LensDetailInfoDownProps) {
+export default function LensDetailInfoDown({ lensDetail }: LensDetailInfoDownProps) {
   return (
     <LensDetailDownBox>
       <h3>상세보기</h3>
       <div className="detail-desc-container">
-        <a
-          href={lensDetail.page_url}
-          target="_blank"
-          rel="noreferrer"
-          className="page-url"
-        >
+        <a href={lensDetail.page_url} target="_blank" rel="noreferrer" className="page-url">
           해당 렌즈사이트로 이동
         </a>
         <br />
-        <div className="detail-imgs">
-          <img
-            className="detail-img"
-            src={lensDetail.detail_img}
-            alt="detail-sub-visual"
-          />
-        </div>
+        {!lensDetail.detail_img ? (
+          <div>
+            <img src={lensDetail.eye_thumbnail} alt="eye" width={500} height={550} />
+          </div>
+        ) : (
+          <div className="detail-imgs">
+            <img className="detail-img" src={lensDetail.detail_img} alt="detail-sub-visual" />
+          </div>
+        )}
       </div>
     </LensDetailDownBox>
   );

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import NavBarToBackAndHome from "../components/NavBarToBackAndHome";
 import MenuHeaderCateContainer from "../containers/MenuHeaderCateContainer";
 import MenuLensCateContainer from "../containers/MenuLensCateContainer";
-import MenuCommunCateContainer from "../containers/MenuCommunCateContainer";
 
 const MenuPageStyle = styled.section`
   width: 100%;
@@ -23,7 +22,6 @@ export default function MenuPage() {
         <MenuPageStyle>
           <MenuHeaderCateContainer />
           <MenuLensCateContainer />
-          <MenuCommunCateContainer />
         </MenuPageStyle>
       </div>
     </div>

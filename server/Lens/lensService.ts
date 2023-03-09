@@ -107,15 +107,44 @@ export default class LensService {
     return userInfo;
   }
 
-  async getUserInfo(sessionId: string) {
-    const userInfo = this.lensRepo.getUserId(sessionId);
-    console.log(userInfo);
+  async getUserId(sessionId: string) {
+    const userId = this.lensRepo.getUserId(sessionId);
+    // console.log("[service]", userId);
+    return userId;
+  }
+
+  async getUserInfo(id: string) {
+    const userInfo = this.lensRepo.getUserInfo(id);
     return userInfo;
   }
 
   signup(userId: string, userPassword: string, userName: string): boolean {
     const userInfo = this.lensRepo.signup(userId, userPassword, userName);
     if (userInfo.id === userId) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async subscribeLens(sessionId: string, lensId: number) {
+    const wishlist = this.lensRepo.subscribeLens(sessionId, lensId);
+    return wishlist;
+  }
+
+  async checkLogin(sessionId: string): Promise<boolean> {
+    const res = this.lensRepo.checkLogin(sessionId);
+    return res;
+  }
+
+  async getWishList(sessionId: string): Promise<ILensItemByKeyword[]> {
+    const lenslist = this.lensRepo.getWishList(sessionId);
+    return lenslist;
+  }
+
+  async logout(sessionId: string): Promise<boolean> {
+    const res: string = this.lensRepo.logout(sessionId);
+    if (res === "success") {
       return true;
     } else {
       return false;

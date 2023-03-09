@@ -37,4 +37,9 @@ export default class LensApi {
     const res = await axios.get("/color-list");
     return res.data;
   }
+
+  async getLensListByWishList(): Promise<ILensItem[]> {
+    const res = await axios.get("/products/wishlist");
+    return res.data;
+  }
 }

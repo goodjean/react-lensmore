@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { IGraphic, IGraphics } from "../types/filter";
+import { IMinMax, IMinMaxText } from "../types/filter";
 import styled from "styled-components";
 
 const GraphicItemStyle = styled.li`
@@ -35,9 +35,9 @@ const GraphicItemStyle = styled.li`
 `;
 
 interface GraphicItemProps {
-  graphic: IGraphics;
-  graphicFilterList: IGraphic[];
-  setGraphicFilterList: Dispatch<SetStateAction<IGraphic[]>>;
+  graphic: IMinMaxText;
+  graphicFilterList: IMinMax[];
+  setGraphicFilterList: Dispatch<SetStateAction<IMinMax[]>>;
 }
 
 function FilterGraphicItem({ graphic, graphicFilterList, setGraphicFilterList }: GraphicItemProps) {

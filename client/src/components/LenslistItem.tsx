@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { ILensItem } from "../types/lens";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import HeartItem from "./HeartItem";
 
 const LensItemByBrandBox = styled.div`
   background-color: #f3f4f6;
   width: 100%;
-  height: 263px;
+  height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,6 +75,7 @@ export default function LenslistItem({ lens }: LenslistItemProps) {
 
   return (
     <LensItemByBrandBox>
+      <HeartItem lensId={lens.id} />
       <Link to={`/product/detail/${lens.id}`} className="lens-item">
         <img src={lens.img} alt="lens-item" className="lens-item-img" />
       </Link>

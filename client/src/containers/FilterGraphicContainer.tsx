@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import FilterGraphicItem from "../components/FilterGraphicItem";
-import { IGraphics, IGraphic } from "../types/filter";
+import { IisPositiveCondi, IMinMax, IMinMaxText } from "../types/filter";
 
 const GraphicContainerStyle = styled.div`
   width: 100%;
@@ -41,35 +41,26 @@ const GraphicContainerStyle = styled.div`
 `;
 
 interface GraphicContainerProps {
-  setGraphics: Dispatch<SetStateAction<{ min: number; max: number; isPositive: boolean }[]>>;
+  setGraphics: Dispatch<SetStateAction<IisPositiveCondi[]>>;
+  filterSorting: (
+    someFilterList: IMinMax[],
+    setFilters: Dispatch<SetStateAction<IisPositiveCondi[]>>,
+    someFilterStates: IMinMaxText[],
+    minValue: number,
+    maxValue: number
+  ) => void;
 }
 
-function FilterGraphicContainer({ setGraphics }: GraphicContainerProps) {
-  const [graphicStates, setGraphicStates] = useState<IGraphics[]>([
+function FilterGraphicContainer({ setGraphics, filterSorting }: GraphicContainerProps) {
+  const [graphicStates, setGraphicStates] = useState<IMinMaxText[]>([
     { id: 1, text: "11.9 ~ 13.0", min: 11.9, max: 13.0 },
     { id: 2, text: "13.1 ~ 13.6", min: 13.1, max: 13.6 },
     { id: 3, text: "13.7 ~", min: 13.7, max: 99.9 },
   ]);
-  const [graphicFilterList, setGraphicFilterList] = useState<IGraphic[]>([]);
+  const [graphicFilterList, setGraphicFilterList] = useState<IMinMax[]>([]);
 
   useEffect(() => {
-    const idArr = graphicFilterList.map((graphic) => graphic.id);
-    if (idArr.includes(1 && 3) && idArr.length === 2 && !idArr.includes(2)) {
-      setGraphics([{ min: 13.1, max: 13.6, isPositive: false }]);
-      console.log("hi");
-    } else if (graphicFilterList.length === 0) {
-      setGraphics([{ min: graphicStates[0].min, max: graphicStates[2].max, isPositive: true }]);
-    } else {
-      const minArr = graphicFilterList.map((g) => g.min);
-      const maxArr = graphicFilterList.map((g) => g.max);
-      minArr.sort(function (a, b) {
-        return a - b;
-      });
-      maxArr.sort(function (a, b) {
-        return b - a;
-      });
-      setGraphics([{ min: minArr[0], max: maxArr[0], isPositive: true }]);
-    }
+    filterSorting(graphicFilterList, setGraphics, graphicStates, 13.1, 13.6);
   }, [setGraphics, graphicFilterList, graphicStates]);
 
   function clickAll() {

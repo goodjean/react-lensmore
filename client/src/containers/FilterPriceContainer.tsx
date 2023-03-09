@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import FilterPriceItem from "../components/FilterPriceItem";
-import { IPrice, IPrices } from "../types/filter";
+import { IisPositiveCondi, IMinMax, IMinMaxText } from "../types/filter";
 
 const PriceContainerStyle = styled.div`
   width: 100%;
@@ -41,35 +41,26 @@ const PriceContainerStyle = styled.div`
 `;
 
 interface PriceContainerProps {
-  setPrices: Dispatch<SetStateAction<{ min: number; max: number; isPositive: boolean }[]>>;
+  setPrices: Dispatch<SetStateAction<IisPositiveCondi[]>>;
+  filterSorting: (
+    someFilterList: IMinMax[],
+    setFilters: Dispatch<SetStateAction<IisPositiveCondi[]>>,
+    someFilterStates: IMinMaxText[],
+    minValue: number,
+    maxValue: number
+  ) => void;
 }
 
-function FilterPriceContainer({ setPrices }: PriceContainerProps) {
-  const [priceStates, setPriceStates] = useState<IPrices[]>([
+function FilterPriceContainer({ setPrices, filterSorting }: PriceContainerProps) {
+  const [priceStates, setPriceStates] = useState<IMinMaxText[]>([
     { id: 1, text: "5000원 ~ 1만원대", min: 5000, max: 19999 },
     { id: 2, text: "2만원대", min: 20000, max: 29999 },
     { id: 3, text: "3만원 이상", min: 30000, max: 9999999 },
   ]);
-  const [priceFilterList, setPriceFilterList] = useState<IPrice[]>([]);
+  const [priceFilterList, setPriceFilterList] = useState<IMinMax[]>([]);
 
   useEffect(() => {
-    const idArr = priceFilterList.map((price) => price.id);
-    if (idArr.includes(1 && 3) && idArr.length === 2 && !idArr.includes(2)) {
-      setPrices([{ min: 20000, max: 29999, isPositive: false }]);
-      console.log("hi");
-    } else if (priceFilterList.length === 0) {
-      setPrices([{ min: priceStates[0].min, max: priceStates[2].max, isPositive: true }]);
-    } else {
-      const minArr = priceFilterList.map((p) => p.min);
-      const maxArr = priceFilterList.map((p) => p.max);
-      minArr.sort(function (a, b) {
-        return a - b;
-      });
-      maxArr.sort(function (a, b) {
-        return b - a;
-      });
-      setPrices([{ min: minArr[0], max: maxArr[0], isPositive: true }]);
-    }
+    filterSorting(priceFilterList, setPrices, priceStates, 20000, 29999);
   }, [setPrices, priceFilterList, priceStates]);
 
   function clickAll() {

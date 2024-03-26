@@ -7,17 +7,13 @@ type PromotionContainerProps = {
   period: string;
 };
 
-export default function PromotionContainer({
-  period,
-}: PromotionContainerProps) {
+export default function PromotionContainer({ period }: PromotionContainerProps) {
   const [promotion, setPromotion] = useState<undefined | IPromotion>();
 
   useEffect(() => {
     (async () => {
       const promotionApi = new PromotionApi();
-      const PromotionProduct = await promotionApi.getPromotionProductByPeriod(
-        period
-      );
+      const PromotionProduct = await promotionApi.getPromotionProductByPeriod(period);
       setPromotion(PromotionProduct);
     })();
   }, [period]);
